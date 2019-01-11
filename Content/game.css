@@ -1,0 +1,9 @@
+#container {
+    width: 640px;
+    margin: auto;
+}
+#canvas {
+    width: 640px;
+    height: 480px;
+    border: 2px black solid;
+}
