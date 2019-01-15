@@ -11,15 +11,15 @@ module objects {
         }
 
         public Update(): void {
-            this.x = managers.Game.stage.mouseX;
-            this.y = managers.Game.stage.mouseY;
-            if(this.x > managers.Game.stage.getBounds().width - this.PivotX){
-                this.x = managers.Game.stage.getBounds().width - this.PivotX;
-            }
+            // this.x = managers.GameManager.SceneManager.MouseX;
+            // this.y = managers.GameManager.SceneManager.MouseY;
+            // if(this.x > managers.GameManager.stage.getBounds().width - this.PivotX){
+            //     this.x = managers.Game.stage.getBounds().width - this.PivotX;
+            // }
             
-            if(this.x < this.PivotX) {
-                this.x = this.PivotX;
-            }
+            // if(this.x < this.PivotX) {
+            //     this.x = this.PivotX;
+            // }
         }
     }
 }

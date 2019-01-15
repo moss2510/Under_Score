@@ -1,54 +1,38 @@
 // IIFE - Immediately Invoked Function Expression 
 (function () {
-    let canvas: HTMLCanvasElement;
-    let stage: createjs.Stage;
 
-    let assetManager: createjs.LoadQueue;
-    let assetManifest: any;
+    let _assetManager: createjs.LoadQueue;
 
     // Game Objects
-    let player: objects.Player;
+    let _sceneManager : managers.SceneManager;
 
-    let background: createjs.Bitmap;
-
-    assetManifest = [
-        { id: "player", src: "./Assets/sprites/player/placeholder-player.png" },
-        { id: "background", src: "./Assets/sprites/environment/placeholder-background.png" }
-    ];
+    let _canvas : HTMLCanvasElement;
+    let _stage : createjs.Stage;
 
     function Init(): void {
-        assetManager = new createjs.LoadQueue();
-        managers.Game.assetManagger = assetManager;
+        _assetManager = new createjs.LoadQueue();
+        _assetManager.installPlugin(createjs.Sound);
+        _assetManager.loadManifest(managers.GameManager.AssetManifest);
 
-        assetManager.installPlugin(createjs.Sound);
 
-        assetManager.loadManifest(assetManifest);
-
+        _canvas = document.getElementsByTagName("canvas")[0]; // get the canvas element
+        _stage = new createjs.Stage(_canvas); // create stage
+        createjs.Ticker.framerate = 60; // set framerate
+        createjs.Ticker.on("tick", Update); // set event handler for tick
         // Call Start after loaded all assets
-        assetManager.on("complete", Start);
+        _assetManager.on("complete", Start);
     }
 
     function Start(): void {
-        canvas = document.getElementsByTagName("canvas")[0];
-        stage = new createjs.Stage(canvas);
-        managers.Game.stage = stage;
-        createjs.Ticker.framerate = 60;
-        createjs.Ticker.on("tick", Update);
-        Main();
+        managers.GameManager.AssetManager = _assetManager;
+        _sceneManager = new managers.SceneManager();
+        managers.GameManager.SceneManager = _sceneManager;
+        managers.SceneManager.Stage = _stage;
+        _sceneManager.ChangeScene(config.Scene.Menu);
     }
 
-    function Update(): void {
-        player.Update();
-        stage.update();
-    }
-
-    function Main(): void {
-        player = new objects.Player();
-
-        background = new createjs.Bitmap(assetManager.getResult("background"));
-
-        stage.addChild(background);
-        stage.addChild(player);
+    function Update(): void{
+        _stage.update();
     }
 
     window.onload = Init;

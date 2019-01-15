@@ -16,7 +16,7 @@ var objects;
     var GameObject = /** @class */ (function (_super) {
         __extends(GameObject, _super);
         function GameObject(imageId) {
-            var _this = _super.call(this, managers.Game.assetManagger.getResult(imageId)) || this;
+            var _this = _super.call(this, managers.GameManager.AssetManager.getResult(imageId)) || this;
             _this._init();
             return _this;
         }

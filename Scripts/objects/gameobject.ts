@@ -31,7 +31,7 @@ module objects {
         }
 
         constructor(imageId: string) {
-            super(managers.Game.assetManagger.getResult(imageId));
+            super(managers.GameManager.AssetManager.getResult(imageId));
             this._init();
         }
 
