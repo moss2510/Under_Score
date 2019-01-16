@@ -6,8 +6,11 @@ module scenes {
         private _btnStart: controls.Button;
         private _btnMute: controls.Button;
 
+        private _musicMuted: boolean = false;
+
         constructor(bgm: createjs.Bitmap) {
             super(config.Scene.Menu, bgm);
+            this.Init();
         }
 
         public OnSceneEnter(): void {
@@ -22,11 +25,14 @@ module scenes {
             this._lbGameName = new controls.Label(config.GameInfo.GameName, centerX, centerY - 15, 15, "Arial bold", "#000000", true);
             this._lbVersion = new controls.Label(config.GameInfo.Version, centerX + 30, centerY - 5, 10, "Arial bold", "#000000", true);
             this._btnStart = new controls.Button(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnStart"), centerX, centerY + 40, true);
-            this._btnMute = new controls.Button(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnMute"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
+            this._btnMute = new controls.Button(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnUnmute"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
 
             this._btnStart.on('click', this._onStartClicked);
-            this._btnMute.on('click', this._onMuteClicked);
-            
+            //Three types of event handling and 'this' keyword inside the function actually refers to different object
+            // this._btnMute.on('click', this._onMuteClicked); //  'this' refers to button
+            // this._btnMute.addEventListener('click', this._onMuteClicked); //  'this' refers to windows
+            this._btnMute.on('click', () => this._onMuteClicked()); //  'this' refers to menu
+
             this.addChild(this._lbGameName);
             this.addChild(this._lbVersion);
             this.addChild(this._btnStart);
@@ -34,7 +40,6 @@ module scenes {
         }
 
         public Update(): void {
-            console.log("Menu Scene Update");
         }
 
         public OnSceneExit(): void {
@@ -47,8 +52,21 @@ module scenes {
             console.log("Start Game");
             managers.GameManager.SceneManager.ChangeScene(config.Scene.Play);
         }
+        
         private _onMuteClicked(): void {
-            console.log("Music muted");
+            if (this._musicMuted) {
+                this._btnMute = new controls.Button(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnUnmute"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
+                this._btnMute.SetBackgroundImage(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnUnmute"));
+            }
+            else {
+            //    this._btnMute = new controls.Button(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnMuted"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
+            //      this._btnMute.SetBackgroundImage(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnMuted"));
+            
+               this._btnMute.image =(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnMuted")).image;
+              this.stage.addChild(this._btnMute);
+              this.stage.update();
+            }
+            this._musicMuted = !this._musicMuted;
         }
         //#endregion
     }

@@ -4,7 +4,7 @@ module managers {
 
         //#region variables
         private _canvas: HTMLCanvasElement; // The canvas element of the HTML document
-        public static Stage: createjs.Stage; // Container for the scenes, think this as the Game Window
+        private _stage: createjs.Stage; // Container for the scenes, think this as the Game Window
         private _currentScene: scenes.Scene; // Scene that holds the objects of the current screen, same as Unity scene
 
         private _screenWidth: number;
@@ -16,6 +16,8 @@ module managers {
             this._canvas = document.getElementsByTagName("canvas")[0];
             this._screenWidth = this._canvas.width;
             this._screenHeight = this._canvas.height;
+
+            this._stage = new createjs.Stage(this._canvas);
         }
 
         //#region Getter funcions
@@ -38,21 +40,22 @@ module managers {
         //#region Functions
 
         public Update(): void {
+            this._stage.update();
             // console.log("Stage Updating");
             //   console.log(this._currentScene == null);
-            if (SceneManager.Stage != undefined || SceneManager.Stage != null) {
+            // if (SceneManager.Stage != undefined || SceneManager.Stage != null) {
 
-                SceneManager.Stage.update();
-                this._currentScene.Update();
-                //   console.log("Stage Updating");
-                //  this._stage.update();
-                console.log(this._currentScene == null);
-                if (this._currentScene != undefined || this._currentScene != null) {
+            //     SceneManager.Stage.update();
+            //     this._currentScene.Update();
+            //     //   console.log("Stage Updating");
+            //     //  this._stage.update();
+            //     console.log(this._currentScene == null);
+            //     if (this._currentScene != undefined || this._currentScene != null) {
 
-                    console.log("Scene Updating");
-                    //   this._currentScene.Update();
-                }
-            }
+            //         console.log("Scene Updating");
+            //         //   this._currentScene.Update();
+            //     }
+            // }
         }
 
         public ChangeScene(sceneType: config.Scene): void {
@@ -65,8 +68,8 @@ module managers {
             if (newScene != undefined || newScene != null) {
                 this._currentScene = newScene; // set to new scene
                 this._currentScene.OnSceneEnter(); // Init scene
-                SceneManager.Stage.removeAllChildren(); // free memory
-                SceneManager.Stage.addChild(this._currentScene); // Add to the screen
+                this._stage.removeAllChildren(); // free memory
+                this._stage.addChild(this._currentScene); // Add to the screen
             }
         }
 
@@ -78,6 +81,9 @@ module managers {
                     break;
                 case config.Scene.Play:
                     result = new levels.Level1(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("background")));
+                    break;
+                case config.Scene.GameOver:
+                    result = new scenes.GameOver(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("background")));
                     break;
             }
             return result;

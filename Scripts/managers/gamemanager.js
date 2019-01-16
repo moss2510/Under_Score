@@ -7,7 +7,8 @@ var managers;
             { id: "player", src: "./Assets/sprites/player/placeholder-player.png" },
             { id: "background", src: "./Assets/sprites/environment/placeholder-background.png" },
             { id: "btnStart", src: "./Assets/sprites/menu/gui/btnStart.png" },
-            { id: "btnMute", src: "./Assets/sprites/menu/gui/btnMute.png" }
+            { id: "btnUnmute", src: "./Assets/sprites/menu/gui/btnUnmute.png" },
+            { id: "btnMuted", src: "./Assets/sprites/menu/gui/btnMuted.png" }
         ];
         return GameManager;
     }());

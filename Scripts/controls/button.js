@@ -15,9 +15,9 @@ var controls;
 (function (controls) {
     var Button = /** @class */ (function (_super) {
         __extends(Button, _super);
-        function Button(backgroundImgSrc, x, y, centerPivot) {
-            var _this = _super.call(this, backgroundImgSrc) || this;
-            _this.backgroundImgSrc = backgroundImgSrc;
+        function Button(backgroundImage, x, y, centerPivot) {
+            var _this = _super.call(this, backgroundImage) || this;
+            _this._backgroundImage = backgroundImage;
             _this.x = x;
             _this.y = y;
             _this.width = _this.getBounds().width;
@@ -28,6 +28,9 @@ var controls;
             }
             return _this;
         }
+        Button.prototype.SetBackgroundImage = function (newBackgroundImage) {
+            this._backgroundImage = newBackgroundImage;
+        };
         return Button;
     }(createjs.Bitmap));
     controls.Button = Button;

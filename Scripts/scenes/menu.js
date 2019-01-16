@@ -16,28 +16,34 @@ var scenes;
     var Menu = /** @class */ (function (_super) {
         __extends(Menu, _super);
         function Menu(bgm) {
-            return _super.call(this, config.Scene.Menu, bgm) || this;
+            var _this = _super.call(this, config.Scene.Menu, bgm) || this;
+            _this._musicMuted = false;
+            _this.Init();
+            return _this;
         }
         Menu.prototype.OnSceneEnter = function () {
             console.log("Menu Scene Enter");
             this.Init();
         };
         Menu.prototype.Init = function () {
+            var _this = this;
             var centerX = managers.GameManager.SceneManager.ScreenWidth / 2;
             var centerY = managers.GameManager.SceneManager.ScreenHeight / 2;
             this._lbGameName = new controls.Label(config.GameInfo.GameName, centerX, centerY - 15, 15, "Arial bold", "#000000", true);
             this._lbVersion = new controls.Label(config.GameInfo.Version, centerX + 30, centerY - 5, 10, "Arial bold", "#000000", true);
             this._btnStart = new controls.Button(managers.GameManager.AssetManager.getResult("btnStart"), centerX, centerY + 40, true);
-            this._btnMute = new controls.Button(managers.GameManager.AssetManager.getResult("btnMute"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
+            this._btnMute = new controls.Button(managers.GameManager.AssetManager.getResult("btnUnmute"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
             this._btnStart.on('click', this._onStartClicked);
-            this._btnMute.on('click', this._onMuteClicked);
+            //Three types of event handling and 'this' keyword inside the function actually refers to different object
+            // this._btnMute.on('click', this._onMuteClicked); //  'this' refers to button
+            // this._btnMute.addEventListener('click', this._onMuteClicked); //  'this' refers to windows
+            this._btnMute.on('click', function () { return _this._onMuteClicked(); }); //  'this' refers to menu
             this.addChild(this._lbGameName);
             this.addChild(this._lbVersion);
             this.addChild(this._btnStart);
             this.addChild(this._btnMute);
         };
         Menu.prototype.Update = function () {
-            console.log("Menu Scene Update");
         };
         Menu.prototype.OnSceneExit = function () {
             console.log("Menu Scene Exit");
@@ -49,7 +55,18 @@ var scenes;
             managers.GameManager.SceneManager.ChangeScene(config.Scene.Play);
         };
         Menu.prototype._onMuteClicked = function () {
-            console.log("Music muted");
+            if (this._musicMuted) {
+                this._btnMute = new controls.Button(managers.GameManager.AssetManager.getResult("btnUnmute"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
+                this._btnMute.SetBackgroundImage(managers.GameManager.AssetManager.getResult("btnUnmute"));
+            }
+            else {
+                //    this._btnMute = new controls.Button(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnMuted"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
+                //      this._btnMute.SetBackgroundImage(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnMuted"));
+                this._btnMute.image = managers.GameManager.AssetManager.getResult("btnMuted").image;
+                this.stage.addChild(this._btnMute);
+                this.stage.update();
+            }
+            this._musicMuted = !this._musicMuted;
         };
         return Menu;
     }(scenes.Scene));

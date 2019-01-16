@@ -6,11 +6,11 @@ module controls {
 
         label: string;
         centerPivot: boolean;
-        backgroundImgSrc: createjs.Bitmap;
+        private _backgroundImage: createjs.Bitmap;
 
-        constructor(backgroundImgSrc: createjs.Bitmap, x: number, y: number, centerPivot: boolean) {
-            super(backgroundImgSrc);
-            this.backgroundImgSrc = backgroundImgSrc;
+        constructor(backgroundImage: createjs.Bitmap, x: number, y: number, centerPivot: boolean) {
+            super(backgroundImage);
+            this._backgroundImage = backgroundImage;
             this.x = x;
             this.y = y;
             this.width = this.getBounds().width;
@@ -20,6 +20,10 @@ module controls {
                 this.regX = this.width / 2;
                 this.regY = this.height / 2;
             }
+        }
+
+        public SetBackgroundImage(newBackgroundImage: createjs.Bitmap): void {
+            this._backgroundImage = newBackgroundImage;
         }
     }
 }

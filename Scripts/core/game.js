@@ -20,11 +20,13 @@
         managers.GameManager.AssetManager = _assetManager;
         _sceneManager = new managers.SceneManager();
         managers.GameManager.SceneManager = _sceneManager;
-        managers.SceneManager.Stage = _stage;
+        // managers.SceneManager.Stage = _stage;
         _sceneManager.ChangeScene(config.Scene.Menu);
     }
     function Update() {
-        _stage.update();
+        if (_sceneManager != null) {
+            _sceneManager.Update();
+        }
     }
     window.onload = Init;
 }());
