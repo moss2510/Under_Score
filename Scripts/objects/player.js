@@ -17,21 +17,34 @@ var objects;
         __extends(Player, _super);
         function Player() {
             var _this = _super.call(this, "player") || this;
-            _this.Start();
+            _this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
             return _this;
         }
-        Player.prototype.Start = function () {
+        Player.prototype.Init = function () {
             this.SetPivotPoint(this.Width / 2, this.Height / 2);
         };
         Player.prototype.Update = function () {
-            // this.x = managers.GameManager.SceneManager.MouseX;
-            // this.y = managers.GameManager.SceneManager.MouseY;
-            // if(this.x > managers.GameManager.stage.getBounds().width - this.PivotX){
-            //     this.x = managers.Game.stage.getBounds().width - this.PivotX;
-            // }
-            // if(this.x < this.PivotX) {
-            //     this.x = this.PivotX;
-            // }
+            _super.prototype.Update.call(this);
+            this.UpdateTransform();
+            this.CheckBoundary();
+        };
+        Player.prototype.UpdateTransform = function () {
+            this.x = managers.GameManager.SceneManager.MouseX;
+            this.y = managers.GameManager.SceneManager.MouseY;
+        };
+        Player.prototype.CheckBoundary = function () {
+            if (this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX) {
+                this.x = managers.GameManager.SceneManager.ScreenWidth - this.PivotX;
+            }
+            if (this.x < this.PivotX) {
+                this.x = this.PivotX;
+            }
+            if (this.y > managers.GameManager.SceneManager.ScreenHeight - this.PivotY) {
+                this.y = managers.GameManager.SceneManager.ScreenHeight - this.PivotY;
+            }
+            if (this.y < this.PivotY) {
+                this.y = this.PivotY;
+            }
         };
         return Player;
     }(objects.GameObject));

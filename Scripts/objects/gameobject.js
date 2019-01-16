@@ -18,6 +18,7 @@ var objects;
         function GameObject(imageId) {
             var _this = _super.call(this, managers.GameManager.AssetManager.getResult(imageId)) || this;
             _this._init();
+            _this.Init();
             return _this;
         }
         Object.defineProperty(GameObject.prototype, "PivotX", {
@@ -58,9 +59,8 @@ var objects;
             this._width = this.getBounds().width;
             this._height = this.getBounds().height;
         };
-        GameObject.prototype.Start = function () {
-        };
         GameObject.prototype.Update = function () {
+            this.UpdateTransform();
         };
         return GameObject;
     }(createjs.Bitmap));

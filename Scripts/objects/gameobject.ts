@@ -7,6 +7,8 @@ module objects {
         private _pivotX: number;
         private _pivotY: number;
 
+        _image : createjs.Bitmap;
+
         get PivotX(): number {
             return this._pivotX;
         }
@@ -33,19 +35,20 @@ module objects {
         constructor(imageId: string) {
             super(managers.GameManager.AssetManager.getResult(imageId));
             this._init();
+            this.Init();
         }
 
-        private _init(): void {
+        private _init() : void{
             this._width = this.getBounds().width;
             this._height = this.getBounds().height;
         }
 
-        public Start(): void {
-
+        public Update(): void{
+            this.UpdateTransform();
         }
 
-        public Update(): void {
-
-        }
+        public abstract Init(): void;
+        public abstract UpdateTransform(): void;
+        public abstract CheckBoundary(): void;
     }
 }

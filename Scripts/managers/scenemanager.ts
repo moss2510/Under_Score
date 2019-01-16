@@ -33,29 +33,22 @@ module managers {
             return this._screenHeight;
         }
 
-        public OnSceneEnter(): void {
+        get MouseX(): number {
+            return this._stage.mouseX;
         }
+
+        get MouseY(): number {
+            return this._stage.mouseY;
+        }
+
         //#endregion
 
         //#region Functions
-
+        public OnSceneEnter(): void {
+        }
         public Update(): void {
             this._stage.update();
-            // console.log("Stage Updating");
-            //   console.log(this._currentScene == null);
-            // if (SceneManager.Stage != undefined || SceneManager.Stage != null) {
-
-            //     SceneManager.Stage.update();
-            //     this._currentScene.Update();
-            //     //   console.log("Stage Updating");
-            //     //  this._stage.update();
-            //     console.log(this._currentScene == null);
-            //     if (this._currentScene != undefined || this._currentScene != null) {
-
-            //         console.log("Scene Updating");
-            //         //   this._currentScene.Update();
-            //     }
-            // }
+            this._currentScene.Update();
         }
 
         public ChangeScene(sceneType: config.Scene): void {

@@ -24,6 +24,7 @@
     }
 
     function Start(): void {
+        console.log("Finish Loading...");
         managers.GameManager.AssetManager = _assetManager;
         _sceneManager = new managers.SceneManager();
         managers.GameManager.SceneManager = _sceneManager;

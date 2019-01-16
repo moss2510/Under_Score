@@ -15,16 +15,19 @@ var levels;
 (function (levels) {
     var Level1 = /** @class */ (function (_super) {
         __extends(Level1, _super);
-        function Level1(bgm) {
-            return _super.call(this, "Floor 1", bgm) || this;
+        function Level1(bg) {
+            return _super.call(this, "Floor 1", bg) || this;
         }
         Level1.prototype.Init = function () {
-            throw new Error("Method not implemented.");
+            this._player = new objects.Player();
+            this.AddGameObject(this._player);
         };
         Level1.prototype.OnSceneEnter = function () {
             console.log("Loadding " + this.Name + "...");
+            this.Init();
         };
         Level1.prototype.Update = function () {
+            _super.prototype.Update.call(this);
         };
         Level1.prototype.OnSceneExit = function () {
         };

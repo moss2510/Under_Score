@@ -1,24 +1,29 @@
-module levels{
-    export class Level1 extends scenes.Play{
+module levels {
+    export class Level1 extends scenes.Play {
+
+        private _player: objects.Player;
 
         public Init(): void {
-            throw new Error("Method not implemented.");
+            this._player = new objects.Player();
+
+            this.AddGameObject(this._player);
         }
 
-        constructor(bgm: createjs.Bitmap){
-            super("Floor 1", bgm);
+        constructor(bg: createjs.Bitmap) {
+            super("Floor 1", bg);
         }
 
         public OnSceneEnter(): void {
             console.log("Loadding " + this.Name + "...");
+            this.Init();
         }
 
         public Update(): void {
-            
+            super.Update();
         }
 
         public OnSceneExit(): void {
-            
+
         }
     }
 }

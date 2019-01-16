@@ -32,25 +32,27 @@ var managers;
             enumerable: true,
             configurable: true
         });
-        SceneManager.prototype.OnSceneEnter = function () {
-        };
+        Object.defineProperty(SceneManager.prototype, "MouseX", {
+            get: function () {
+                return this._stage.mouseX;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(SceneManager.prototype, "MouseY", {
+            get: function () {
+                return this._stage.mouseY;
+            },
+            enumerable: true,
+            configurable: true
+        });
         //#endregion
         //#region Functions
+        SceneManager.prototype.OnSceneEnter = function () {
+        };
         SceneManager.prototype.Update = function () {
             this._stage.update();
-            // console.log("Stage Updating");
-            //   console.log(this._currentScene == null);
-            // if (SceneManager.Stage != undefined || SceneManager.Stage != null) {
-            //     SceneManager.Stage.update();
-            //     this._currentScene.Update();
-            //     //   console.log("Stage Updating");
-            //     //  this._stage.update();
-            //     console.log(this._currentScene == null);
-            //     if (this._currentScene != undefined || this._currentScene != null) {
-            //         console.log("Scene Updating");
-            //         //   this._currentScene.Update();
-            //     }
-            // }
+            this._currentScene.Update();
         };
         SceneManager.prototype.ChangeScene = function (sceneType) {
             // Call the on scene exit function to do a proper dispose

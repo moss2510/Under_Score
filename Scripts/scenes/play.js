@@ -15,8 +15,9 @@ var scenes;
 (function (scenes) {
     var Play = /** @class */ (function (_super) {
         __extends(Play, _super);
-        function Play(name, bgm) {
-            var _this = _super.call(this, config.Scene.Play, bgm) || this;
+        function Play(name, bg) {
+            var _this = _super.call(this, config.Scene.Play, bg) || this;
+            _this._gameObjects = new Array();
             _this._name = name;
             return _this;
         }
@@ -27,6 +28,17 @@ var scenes;
             enumerable: true,
             configurable: true
         });
+        Play.prototype.Update = function () {
+            for (var _i = 0, _a = this._gameObjects; _i < _a.length; _i++) {
+                var gameObject = _a[_i];
+                gameObject.Update();
+            }
+        };
+        Play.prototype.AddGameObject = function (object) {
+            this._gameObjects.push(object);
+            this.addChild(object);
+            this.Update();
+        };
         return Play;
     }(scenes.Scene));
     scenes.Play = Play;
