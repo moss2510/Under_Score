@@ -1,21 +1,12 @@
 module objects {
     export class Player extends objects.GameObject {
 
-        private _transform: components.Transform;
-
         constructor() {
             super("player");
-            this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
         }
 
         public Init(): void {
             this.SetPivotPoint(this.Width / 2, this.Height / 2);
-        }
-
-        public Update(): void {
-            super.Update();
-            this.UpdateTransform();
-            this.CheckBoundary();
         }
 
         public UpdateTransform(): void {

@@ -1,13 +1,13 @@
 module objects {
     export abstract class GameObject extends createjs.Bitmap {
 
+        private _transform: components.Transform;
+
         private _width: number;
         private _height: number;
 
         private _pivotX: number;
         private _pivotY: number;
-
-        _image : createjs.Bitmap;
 
         get PivotX(): number {
             return this._pivotX;
@@ -41,10 +41,12 @@ module objects {
         private _init() : void{
             this._width = this.getBounds().width;
             this._height = this.getBounds().height;
+            this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
         }
 
         public Update(): void{
             this.UpdateTransform();
+            this.CheckBoundary();
         }
 
         public abstract Init(): void;

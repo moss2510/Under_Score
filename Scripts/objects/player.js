@@ -16,17 +16,10 @@ var objects;
     var Player = /** @class */ (function (_super) {
         __extends(Player, _super);
         function Player() {
-            var _this = _super.call(this, "player") || this;
-            _this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
-            return _this;
+            return _super.call(this, "player") || this;
         }
         Player.prototype.Init = function () {
             this.SetPivotPoint(this.Width / 2, this.Height / 2);
-        };
-        Player.prototype.Update = function () {
-            _super.prototype.Update.call(this);
-            this.UpdateTransform();
-            this.CheckBoundary();
         };
         Player.prototype.UpdateTransform = function () {
             this.x = managers.GameManager.SceneManager.MouseX;

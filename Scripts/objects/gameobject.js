@@ -58,9 +58,11 @@ var objects;
         GameObject.prototype._init = function () {
             this._width = this.getBounds().width;
             this._height = this.getBounds().height;
+            this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
         };
         GameObject.prototype.Update = function () {
             this.UpdateTransform();
+            this.CheckBoundary();
         };
         return GameObject;
     }(createjs.Bitmap));

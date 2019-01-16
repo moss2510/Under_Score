@@ -16,10 +16,15 @@ var levels;
     var Level1 = /** @class */ (function (_super) {
         __extends(Level1, _super);
         function Level1(bg) {
-            return _super.call(this, "Floor 1", bg) || this;
+            var _this = _super.call(this, "Floor 1", bg) || this;
+            _this._numberOfObstacles = 10;
+            return _this;
         }
         Level1.prototype.Init = function () {
             this._player = new objects.Player();
+            for (var i = 0; i < this._numberOfObstacles; i++) {
+                this.AddGameObject(new objects.Obstacle());
+            }
             this.AddGameObject(this._player);
         };
         Level1.prototype.OnSceneEnter = function () {
