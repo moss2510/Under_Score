@@ -9,6 +9,8 @@ module objects {
         private _pivotX: number;
         private _pivotY: number;
 
+        private _components: components.Component[] = new Array();
+
         get PivotX(): number {
             return this._pivotX;
         }
@@ -38,15 +40,29 @@ module objects {
             this.Init();
         }
 
-        private _init() : void{
+        private _init(): void {
             this._width = this.getBounds().width;
             this._height = this.getBounds().height;
             this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
         }
 
-        public Update(): void{
+        public Update(): void {
             this.UpdateTransform();
             this.CheckBoundary();
+            this._updateComponents();
+        }
+
+        public AddComponent(component: components.Component) {
+            component.SetOwner(this);
+            this._components.push(component);
+        }
+
+        private _updateComponents(): void {
+            for (let component of this._components) {
+                if (component.Owner == this) {
+                    component.Update();
+                }
+            }
         }
 
         public abstract Init(): void;

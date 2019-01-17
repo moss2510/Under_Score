@@ -17,6 +17,7 @@ var objects;
         __extends(GameObject, _super);
         function GameObject(imageId) {
             var _this = _super.call(this, managers.GameManager.AssetManager.getResult(imageId)) || this;
+            _this._components = new Array();
             _this._init();
             _this.Init();
             return _this;
@@ -63,6 +64,19 @@ var objects;
         GameObject.prototype.Update = function () {
             this.UpdateTransform();
             this.CheckBoundary();
+            this._updateComponents();
+        };
+        GameObject.prototype.AddComponent = function (component) {
+            component.SetOwner(this);
+            this._components.push(component);
+        };
+        GameObject.prototype._updateComponents = function () {
+            for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
+                var component = _a[_i];
+                if (component.Owner == this) {
+                    component.Update();
+                }
+            }
         };
         return GameObject;
     }(createjs.Bitmap));

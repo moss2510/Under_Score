@@ -24,6 +24,9 @@ var objects;
             this.SetPivotPoint(this.Width / 2, this.Height / 2);
             this.x = Math.floor(Math.random() * (managers.GameManager.SceneManager.ScreenWidth) - this.PivotX);
             this.y = Math.floor(Math.random() * (managers.GameManager.SceneManager.ScreenHeight) + this.PivotY);
+            var rb2d = new components.Rigidbody2D();
+            rb2d.Velocity.Y = 1;
+            this.AddComponent(rb2d);
         };
         Obstacle.prototype.UpdateTransform = function () {
             this.x += this._direction;
@@ -31,6 +34,9 @@ var objects;
         Obstacle.prototype.CheckBoundary = function () {
             if (this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX || this.x < this.PivotX) {
                 this._direction *= -1;
+            }
+            if (this.y > managers.GameManager.SceneManager.ScreenHeight - this.PivotY) {
+                this.y = managers.GameManager.SceneManager.ScreenHeight - this.PivotY;
             }
         };
         return Obstacle;
