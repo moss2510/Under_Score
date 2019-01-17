@@ -36,14 +36,30 @@ module objects {
 
         constructor(imageId: string) {
             super(managers.GameManager.AssetManager.getResult(imageId));
-            this._init();
+            this._beforeInit();
             this.Init();
+            this._afterInit();
         }
 
-        private _init(): void {
+        private _beforeInit(): void {
             this._width = this.getBounds().width;
             this._height = this.getBounds().height;
-            this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
+            //this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
+        }
+
+        private _afterInit(): void {
+            if (this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX) {
+                this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX;
+            }
+            if (this.x < this.PivotX) {
+                this.x = this.PivotX;
+            }
+            if (this.y > managers.GameManager.SceneManager.ScreenHeight - this.PivotY) {
+                this.y = managers.GameManager.SceneManager.ScreenHeight - this.PivotY;
+            }
+            if (this.y < this.PivotY) {
+                this.y = this.PivotY;
+            }
         }
 
         public Update(): void {

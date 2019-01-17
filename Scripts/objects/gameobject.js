@@ -18,8 +18,9 @@ var objects;
         function GameObject(imageId) {
             var _this = _super.call(this, managers.GameManager.AssetManager.getResult(imageId)) || this;
             _this._components = new Array();
-            _this._init();
+            _this._beforeInit();
             _this.Init();
+            _this._afterInit();
             return _this;
         }
         Object.defineProperty(GameObject.prototype, "PivotX", {
@@ -56,10 +57,24 @@ var objects;
             this.regX = x;
             this.regY = y;
         };
-        GameObject.prototype._init = function () {
+        GameObject.prototype._beforeInit = function () {
             this._width = this.getBounds().width;
             this._height = this.getBounds().height;
-            this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
+            //this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
+        };
+        GameObject.prototype._afterInit = function () {
+            if (this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX) {
+                this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX;
+            }
+            if (this.x < this.PivotX) {
+                this.x = this.PivotX;
+            }
+            if (this.y > managers.GameManager.SceneManager.ScreenHeight - this.PivotY) {
+                this.y = managers.GameManager.SceneManager.ScreenHeight - this.PivotY;
+            }
+            if (this.y < this.PivotY) {
+                this.y = this.PivotY;
+            }
         };
         GameObject.prototype.Update = function () {
             this.UpdateTransform();
