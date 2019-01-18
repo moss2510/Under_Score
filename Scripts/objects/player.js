@@ -16,15 +16,28 @@ var objects;
     var Player = /** @class */ (function (_super) {
         __extends(Player, _super);
         function Player() {
-            return _super.call(this, "player") || this;
+            var _this = _super.call(this, "player") || this;
+            _this._movementSpeed = 5;
+            _this._jumpForce = 50;
+            var rb2d = new components.Rigidbody2D();
+            _this.AddComponent(rb2d);
+            return _this;
         }
         Player.prototype.Init = function () {
             this.SetPivotPoint(this.Width / 2, this.Height / 2);
-            managers.GameManager.SceneManager.CurrentScene.on("keydown", this._handleInput);
         };
         Player.prototype.UpdateTransform = function () {
-            this.x = managers.GameManager.SceneManager.MouseX;
-            this.y = managers.GameManager.SceneManager.MouseY;
+            // this.x = managers.GameManager.SceneManager.MouseX;
+            // this.y = managers.GameManager.SceneManager.MouseY;
+            if (managers.InputManager.KeyDown(config.Key.LEFT)) {
+                this.x -= this._movementSpeed;
+            }
+            if (managers.InputManager.KeyDown(config.Key.RIGHT)) {
+                this.x += this._movementSpeed;
+            }
+            if (managers.InputManager.KeyUp(config.Key.SPACE)) {
+                this.y -= this._jumpForce;
+            }
         };
         Player.prototype.CheckBoundary = function () {
             if (this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX) {
@@ -38,25 +51,6 @@ var objects;
             }
             if (this.y < this.PivotY) {
                 this.y = this.PivotY;
-            }
-        };
-        Player.prototype._handleInput = function (event) {
-            switch (event.keyCode) {
-                case managers.Input.KEYCODE_UP:
-                    console.log("KEYCODE_UP");
-                    break;
-                case managers.Input.KEYCODE_DOWN:
-                    console.log("KEYCODE_DOWN");
-                    break;
-                case managers.Input.KEYCODE_LEFT:
-                    console.log("KEYCODE_LEFT");
-                    break;
-                case managers.Input.KEYCODE_RIGHT:
-                    console.log("KEYCODE_RIGHT");
-                    break;
-                case managers.Input.KEYCODE_SPACE:
-                    console.log("KEYCODE_SPACE");
-                    break;
             }
         };
         return Player;

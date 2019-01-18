@@ -15,17 +15,26 @@ var utils;
             var index = this._keys.indexOf(key, 0);
             this._keys.splice(index, 1);
             this._values.splice(index, 1);
-            delete this[key];
+            delete this[typeof (key)];
         };
         Dictionary.prototype.Set = function (key, value) {
-            this.Remove(key);
-            this.Add(key, value);
+            if (this.ContainsKey(key)) {
+                var index = this._keys.indexOf(key, 0);
+                this._values[index] = value;
+            }
         };
         Dictionary.prototype.ContainsKey = function (key) {
             if (typeof this[key] === "undefined") {
                 return false;
             }
             return true;
+        };
+        Dictionary.prototype.GetValue = function (key) {
+            if (this.ContainsKey(key)) {
+                var index = this._keys.indexOf(key, 0);
+                return this._values[index];
+            }
+            return null;
         };
         Dictionary.prototype.Keys = function () {
             return this._keys;

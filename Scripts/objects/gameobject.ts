@@ -64,8 +64,8 @@ module objects {
 
         public Update(): void {
             this.UpdateTransform();
-            this.CheckBoundary();
             this._updateComponents();
+            this.CheckBoundary();
         }
 
         public AddComponent(component: components.Component) {

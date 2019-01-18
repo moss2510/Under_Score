@@ -62,12 +62,12 @@ module components {
 
     export class Rigidbody2D extends components.Component {
         private _velocity: components.Point;
-        private _gravity: number;
+        private _gravityScale: number;
 
         constructor() {
             super();
             this._velocity = new components.Point(0, 0);
-            this._gravity = 0;
+            this._gravityScale = 1;
         }
 
         get Velocity(): components.Point {
@@ -78,17 +78,18 @@ module components {
             this._velocity = velocity;
         }
 
-        get Gravity(): number {
-            return this._gravity;
+        get GravityScale(): number {
+            return this._gravityScale;
         }
 
-        set Gravity(gravity: number) {
-            this._gravity = gravity;
+        set GravityScale(gravityScale: number) {
+            this._gravityScale = gravityScale;
         }
 
         public Update(): void {
             this.Owner.x += this._velocity.X;
-            this.Owner.y += this._velocity.Y - this._gravity;
+            this.Owner.y -= this._velocity.Y;
+            this.Owner.y += this._gravityScale * physics.Config.GRAVITY;
         }
     }
 }

@@ -1,18 +1,31 @@
 module objects {
     export class Player extends objects.GameObject {
 
+        private _movementSpeed: number = 5;
+        private _jumpForce: number = 50;
+
         constructor() {
             super("player");
+            let rb2d = new components.Rigidbody2D();
+            this.AddComponent(rb2d);
         }
 
         public Init(): void {
             this.SetPivotPoint(this.Width / 2, this.Height / 2);
-            managers.GameManager.SceneManager.CurrentScene.on("keydown", this._handleInput);
         }
 
         public UpdateTransform(): void {
-            this.x = managers.GameManager.SceneManager.MouseX;
-            this.y = managers.GameManager.SceneManager.MouseY;
+            // this.x = managers.GameManager.SceneManager.MouseX;
+            // this.y = managers.GameManager.SceneManager.MouseY;
+            if (managers.InputManager.KeyDown(config.Key.LEFT)) {
+                this.x -= this._movementSpeed;
+            }
+            if (managers.InputManager.KeyDown(config.Key.RIGHT)) {
+                this.x += this._movementSpeed;
+            }
+            if (managers.InputManager.KeyUp(config.Key.SPACE)) {
+                this.y -= this._jumpForce;
+            }
         }
 
         public CheckBoundary() {
@@ -31,27 +44,6 @@ module objects {
             if (this.y < this.PivotY) {
                 this.y = this.PivotY;
             }
-        }
-
-        private _handleInput(event): void {
-            switch (event.keyCode) {
-                case managers.Input.KEYCODE_UP:
-                    console.log("KEYCODE_UP");
-                    break;
-                case managers.Input.KEYCODE_DOWN:
-                    console.log("KEYCODE_DOWN");
-                    break;
-                case managers.Input.KEYCODE_LEFT:
-                    console.log("KEYCODE_LEFT");
-                    break;
-                case managers.Input.KEYCODE_RIGHT:
-                    console.log("KEYCODE_RIGHT");
-                    break;
-                case managers.Input.KEYCODE_SPACE:
-                    console.log("KEYCODE_SPACE");
-                    break;
-            }
-
         }
     }
 }

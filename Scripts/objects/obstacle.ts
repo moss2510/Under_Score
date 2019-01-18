@@ -12,7 +12,6 @@ module objects{
             this.x = Math.floor(Math.random() * (managers.GameManager.SceneManager.ScreenWidth) - this.PivotX);
             this.y = Math.floor(Math.random() * (managers.GameManager.SceneManager.ScreenHeight) + this.PivotY);
             let rb2d = new components.Rigidbody2D();
-            rb2d.Velocity.Y = 1;
             this.AddComponent(rb2d);
         }
 

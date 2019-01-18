@@ -60,9 +60,9 @@ var scenes;
                 this._btnMute.SetBackgroundImage(managers.GameManager.AssetManager.getResult("btnUnmute"));
             }
             else {
-                //    this._btnMute = new controls.Button(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnMuted"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
+                this._btnMute = new controls.Button(managers.GameManager.AssetManager.getResult("btnMuted"), managers.GameManager.SceneManager.ScreenWidth - 40, managers.GameManager.SceneManager.ScreenHeight - 40, true);
                 //      this._btnMute.SetBackgroundImage(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnMuted"));
-                this._btnMute.image = managers.GameManager.AssetManager.getResult("btnMuted").image;
+                //   this._btnMute.image =(<createjs.Bitmap>managers.GameManager.AssetManager.getResult("btnMuted")).image;
                 this.stage.addChild(this._btnMute);
                 this.stage.update();
             }

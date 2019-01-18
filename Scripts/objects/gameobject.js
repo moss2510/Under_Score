@@ -78,8 +78,8 @@ var objects;
         };
         GameObject.prototype.Update = function () {
             this.UpdateTransform();
-            this.CheckBoundary();
             this._updateComponents();
+            this.CheckBoundary();
         };
         GameObject.prototype.AddComponent = function (component) {
             component.SetOwner(this);

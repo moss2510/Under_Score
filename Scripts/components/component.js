@@ -87,7 +87,7 @@ var components;
         function Rigidbody2D() {
             var _this = _super.call(this) || this;
             _this._velocity = new components.Point(0, 0);
-            _this._gravity = 0;
+            _this._gravityScale = 1;
             return _this;
         }
         Object.defineProperty(Rigidbody2D.prototype, "Velocity", {
@@ -100,19 +100,20 @@ var components;
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Rigidbody2D.prototype, "Gravity", {
+        Object.defineProperty(Rigidbody2D.prototype, "GravityScale", {
             get: function () {
-                return this._gravity;
+                return this._gravityScale;
             },
-            set: function (gravity) {
-                this._gravity = gravity;
+            set: function (gravityScale) {
+                this._gravityScale = gravityScale;
             },
             enumerable: true,
             configurable: true
         });
         Rigidbody2D.prototype.Update = function () {
             this.Owner.x += this._velocity.X;
-            this.Owner.y += this._velocity.Y - this._gravity;
+            this.Owner.y -= this._velocity.Y;
+            this.Owner.y += this._gravityScale * physics.Config.GRAVITY;
         };
         return Rigidbody2D;
     }(components.Component));

@@ -1,50 +1,60 @@
 module utils {
 
     // Dictionary From https://stackoverflow.com/questions/15877362/declare-and-initialize-a-dictionary-in-typescript with a few modification.
-    export class Dictionary<K, V> implements IDictionary<K, V>{
+    export class Dictionary<TKey, TValue> implements IDictionary<string, TValue>{
 
-        private _keys: K[] = [];
-        private _values: V[] = [];
+        private _keys: string[] = [];
+        private _values: TValue[] = [];
 
-        Add(key: any, value: V): void {
+        Add(key: string, value: TValue): void {
             this[key] = value; // Create a varaible in this class?
             this._keys.push(key);
             this._values.push(value);
         }
 
-        Remove(key: any): void {
+        Remove(key: string): void {
             let index = this._keys.indexOf(key, 0);
             this._keys.splice(index, 1);
             this._values.splice(index, 1);
-            delete this[key];
+            delete this[typeof (key)];
         }
 
-        Set(key: any, value: V){
-            this.Remove(key);
-            this.Add(key, value);
+        Set(key: string, value: TValue) {
+            if (this.ContainsKey(key)) {
+                let index = this._keys.indexOf(key, 0);
+                this._values[index] = value;
+            }
         }
 
-        ContainsKey(key: any): boolean {
+        ContainsKey(key: string): boolean {
             if (typeof this[key] === "undefined") {
                 return false;
             }
             return true;
         }
 
-        Keys(): K[] {
+        GetValue(key: string): TValue {
+            if (this.ContainsKey(key)) {
+                let index = this._keys.indexOf(key, 0);
+                return this._values[index];
+            }
+            return null;
+        }
+
+        Keys(): string[] {
             return this._keys;
         }
 
-        Values(): V[] {
+        Values(): TValue[] {
             return this._values;
         }
     }
 
-    interface IDictionary<K, V> {
-        Add(key: K, value: V): void;
-        Remove(key: K): void;
-        ContainsKey(key: K): boolean;
-        Keys(): K[];
-        Values(): V[];
+    interface IDictionary<TKey, TValue> {
+        Add(key: TKey, value: TValue): void;
+        Remove(key: TKey): void;
+        ContainsKey(key: TKey): boolean;
+        Keys(): TKey[];
+        Values(): TValue[];
     }
 }
