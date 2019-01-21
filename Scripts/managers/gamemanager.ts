@@ -2,6 +2,7 @@ module managers {
     export class GameManager {
         public static AssetManager: createjs.LoadQueue; // handles preload
         public static SceneManager: managers.SceneManager; // handles scenes
+        public static CameraManager: managers.CameraManager; // handles camera movement
         public static AssetManifest = [
             { id: "player", src: "./Assets/sprites/player/placeholder-player.png" },
             { id: "obstacle", src: "./Assets/sprites/player/placeholder-obstacle.png" },

@@ -9,6 +9,8 @@ var managers;
             this._screenWidth = this._canvas.width;
             this._screenHeight = this._canvas.height;
             this._stage = new createjs.Stage(this._canvas);
+            this._camera = new managers.CameraManager();
+            managers.GameManager.CameraManager = this._camera;
         }
         Object.defineProperty(SceneManager.prototype, "CurrentScene", {
             //#region Getter funcions
@@ -49,10 +51,13 @@ var managers;
         //#endregion
         //#region Functions
         SceneManager.prototype.OnSceneEnter = function () {
+            console.log(this._currentScene.x);
+            console.log(this._currentScene.y);
         };
         SceneManager.prototype.Update = function () {
             this._stage.update();
             this._currentScene.Update();
+            this._camera.Update();
         };
         SceneManager.prototype.ChangeScene = function (sceneType) {
             // Call the on scene exit function to do a proper dispose

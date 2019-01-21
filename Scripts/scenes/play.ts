@@ -18,6 +18,8 @@ module scenes {
             for(let gameObject of this._gameObjects){
                 gameObject.Update();
             }
+            this.x = managers.GameManager.CameraManager.X;
+            this.y = managers.GameManager.CameraManager.Y;
         }
 
         public AddGameObject(object: objects.GameObject){

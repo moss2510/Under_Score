@@ -18,9 +18,11 @@ var objects;
         function Player() {
             var _this = _super.call(this, "player") || this;
             _this._movementSpeed = 5;
-            _this._jumpForce = 50;
+            _this._jumpForce = 100;
+            _this._isJumping = false;
             var rb2d = new components.Rigidbody2D();
             _this.AddComponent(rb2d);
+            managers.GameManager.CameraManager.Follow(_this);
             return _this;
         }
         Player.prototype.Init = function () {
@@ -35,8 +37,9 @@ var objects;
             if (managers.InputManager.KeyDown(config.Key.RIGHT)) {
                 this.x += this._movementSpeed;
             }
-            if (managers.InputManager.KeyUp(config.Key.SPACE)) {
-                this.y -= this._jumpForce;
+            if (managers.InputManager.KeyUp(config.Key.SPACE) && !this._isJumping) {
+                this._isJumping = true;
+                createjs.Tween.get(this).to({ y: this.y - this._jumpForce }, 300).call(this.onFinishJump);
             }
         };
         Player.prototype.CheckBoundary = function () {
@@ -52,6 +55,10 @@ var objects;
             if (this.y < this.PivotY) {
                 this.y = this.PivotY;
             }
+        };
+        Player.prototype.onFinishJump = function () {
+            var _this = this;
+            createjs.Tween.get(this).to({ y: this.y + this._jumpForce }, 500).call(function () { return _this._isJumping = false; });
         };
         return Player;
     }(objects.GameObject));

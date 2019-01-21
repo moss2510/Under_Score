@@ -7,6 +7,8 @@ module managers {
         private _stage: createjs.Stage; // Container for the scenes, think this as the Game Window
         private _currentScene: scenes.Scene; // Scene that holds the objects of the current screen, same as Unity scene
 
+        private _camera: managers.CameraManager;
+
         private _screenWidth: number;
         private _screenHeight: number;
         //#endregion
@@ -18,6 +20,9 @@ module managers {
             this._screenHeight = this._canvas.height;
 
             this._stage = new createjs.Stage(this._canvas);
+
+            this._camera = new managers.CameraManager();
+            managers.GameManager.CameraManager = this._camera;
         }
 
         //#region Getter funcions
@@ -45,10 +50,13 @@ module managers {
 
         //#region Functions
         public OnSceneEnter(): void {
+            console.log(this._currentScene.x);
+            console.log(this._currentScene.y);
         }
         public Update(): void {
             this._stage.update();
             this._currentScene.Update();
+            this._camera.Update();
         }
 
         public ChangeScene(sceneType: config.Scene): void {

@@ -33,6 +33,8 @@ var scenes;
                 var gameObject = _a[_i];
                 gameObject.Update();
             }
+            this.x = managers.GameManager.CameraManager.X;
+            this.y = managers.GameManager.CameraManager.Y;
         };
         Play.prototype.AddGameObject = function (object) {
             this._gameObjects.push(object);
