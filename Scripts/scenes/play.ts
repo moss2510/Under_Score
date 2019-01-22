@@ -8,10 +8,16 @@ module scenes {
 
         private _levelBoundarySize: number = 0;
 
+        private _levelCompleted;
+
         private _gameObjects: objects.GameObject[] = new Array();
 
         get Name(): string {
             return this._name;
+        }
+
+        set LevelCompleted(completed: boolean) {
+            this._levelCompleted = completed;
         }
 
         constructor(name: string, bg: createjs.Bitmap) {
@@ -25,6 +31,9 @@ module scenes {
             }
             this.x = managers.GameManager.CameraManager.X;
             this.y = managers.GameManager.CameraManager.Y;
+            if (this._levelCompleted) {
+                this.OnLevelCompleted();
+            }
         }
 
         public AddGameObject(object: objects.GameObject) {
@@ -54,5 +63,7 @@ module scenes {
         protected SetLevelBoundarySize(newSize: number) {
             this._levelBoundarySize = newSize;
         }
+
+        public abstract OnLevelCompleted(): void;
     }
 }

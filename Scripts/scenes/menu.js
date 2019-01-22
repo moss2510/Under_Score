@@ -54,7 +54,7 @@ var scenes;
         //#region UI Handler
         Menu.prototype._onStartClicked = function () {
             console.log("Start Game");
-            managers.GameManager.SceneManager.ChangeScene(config.Scene.Play);
+            managers.GameManager.SceneManager.LoadLevel(1);
         };
         Menu.prototype._onMuteClicked = function () {
             if (this._musicMuted) {

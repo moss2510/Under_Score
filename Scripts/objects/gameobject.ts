@@ -83,6 +83,12 @@ module objects {
             this._components.push(component);
         }
 
+        public Instanitate(gameObject: objects.GameObject){
+            if(utils.Util.NotNullOrUndefined(this._currentLevel)){
+                this._currentLevel.AddGameObject(gameObject);
+            }
+        }
+
         private _updateComponents(): void {
             for (let component of this._components) {
                 if (component.Owner == this) {

@@ -1,5 +1,5 @@
 module levels {
-    export class Level1 extends scenes.Play {
+    export class Level2 extends scenes.Play {
 
         private _player: objects.Player;
         private _numberOfObstacles: number = 10;
@@ -18,11 +18,11 @@ module levels {
         }
 
         constructor(bg: createjs.Bitmap) {
-            super("Floor 1", bg);
+            super("Floor 2", bg);
         }
 
         public OnSceneEnter(): void {
-            console.log("Loading " + this.Name + "...");
+            console.log("Loadding " + this.Name + "...");
             this.Init();
         }
 
@@ -35,7 +35,7 @@ module levels {
         }
 
         public OnLevelCompleted(): void {
-            managers.GameManager.SceneManager.LoadLevel(2);
+            managers.GameManager.SceneManager.LoadLevel(3);
         }
     }
 }

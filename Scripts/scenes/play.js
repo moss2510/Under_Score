@@ -31,6 +31,13 @@ var scenes;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Play.prototype, "LevelCompleted", {
+            set: function (completed) {
+                this._levelCompleted = completed;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Play.prototype.Update = function () {
             for (var _i = 0, _a = this._gameObjects; _i < _a.length; _i++) {
                 var gameObject = _a[_i];
@@ -38,6 +45,9 @@ var scenes;
             }
             this.x = managers.GameManager.CameraManager.X;
             this.y = managers.GameManager.CameraManager.Y;
+            if (this._levelCompleted) {
+                this.OnLevelCompleted();
+            }
         };
         Play.prototype.AddGameObject = function (object) {
             object.CurrentLevel = this;

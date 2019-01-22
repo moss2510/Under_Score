@@ -1,24 +1,22 @@
 module levels {
-    export class Level1 extends scenes.Play {
+    export class Level3 extends scenes.Play {
 
         private _player: objects.Player;
         private _numberOfObstacles: number = 10;
 
         public Init(): void {
-            this.SetLevelSize(1600, 2400);
+            this.SetLevelSize(1600, 1200);
             this.SetLevelBoundarySize(4);
 
             this._player = new objects.Player();
 
-            for (let i = 0; i < this._numberOfObstacles; i++) {
-                this.AddGameObject(new objects.Obstacle());
-            }
+            this.AddGameObject(new objects.Obstacle());
 
             this.AddGameObject(this._player);
         }
 
         constructor(bg: createjs.Bitmap) {
-            super("Floor 1", bg);
+            super("Rooftop", bg);
         }
 
         public OnSceneEnter(): void {
@@ -35,7 +33,7 @@ module levels {
         }
 
         public OnLevelCompleted(): void {
-            managers.GameManager.SceneManager.LoadLevel(2);
+            managers.GameManager.SceneManager.ChangeScene(config.Scene.Menu);
         }
     }
 }

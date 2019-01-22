@@ -71,21 +71,47 @@ var managers;
                 this._stage.addChild(this._currentScene); // Add to the screen
             }
         };
+        SceneManager.prototype.LoadLevel = function (index) {
+            // Call the on scene exit function to do a proper dispose
+            if (this._currentScene != undefined || this._currentScene != null) {
+                this._currentScene.OnSceneExit(); // handle destory
+            }
+            // Call the on scene enter function to do a proper init
+            var newScene = this._createNewLevel(index);
+            if (newScene != undefined || newScene != null) {
+                this._currentScene = newScene; // set to new scene
+                this._currentScene.OnSceneEnter(); // Init scene
+                this._stage.removeAllChildren(); // free memory
+                this._stage.addChild(this._currentScene); // Add to the screen
+            }
+        };
         SceneManager.prototype._createNewScene = function (type) {
             var result;
             switch (type) {
                 case config.Scene.Menu:
                     result = new scenes.Menu(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("")));
                     break;
-                case config.Scene.Play:
-                    result = new levels.Level1(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level1")));
-                    managers.GameManager.CurrentLevel = result;
-                    break;
                 case config.Scene.GameOver:
                     result = new scenes.GameOver(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("")));
                     break;
             }
             console.log("Scene Created");
+            return result;
+        };
+        SceneManager.prototype._createNewLevel = function (index) {
+            var result;
+            switch (index) {
+                case 1:
+                    result = new levels.Level1(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level1")));
+                    break;
+                case 2:
+                    result = new levels.Level2(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level2")));
+                    break;
+                case 3:
+                    result = new levels.Level3(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level2")));
+                    break;
+            }
+            console.log("Level Created");
             return result;
         };
         return SceneManager;

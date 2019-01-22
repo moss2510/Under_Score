@@ -13,14 +13,14 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var levels;
 (function (levels) {
-    var Level1 = /** @class */ (function (_super) {
-        __extends(Level1, _super);
-        function Level1(bg) {
-            var _this = _super.call(this, "Floor 1", bg) || this;
+    var Level2 = /** @class */ (function (_super) {
+        __extends(Level2, _super);
+        function Level2(bg) {
+            var _this = _super.call(this, "Floor 2", bg) || this;
             _this._numberOfObstacles = 10;
             return _this;
         }
-        Level1.prototype.Init = function () {
+        Level2.prototype.Init = function () {
             this.SetLevelSize(1600, 2400);
             this.SetLevelBoundarySize(4);
             this._player = new objects.Player();
@@ -29,20 +29,20 @@ var levels;
             }
             this.AddGameObject(this._player);
         };
-        Level1.prototype.OnSceneEnter = function () {
-            console.log("Loading " + this.Name + "...");
+        Level2.prototype.OnSceneEnter = function () {
+            console.log("Loadding " + this.Name + "...");
             this.Init();
         };
-        Level1.prototype.Update = function () {
+        Level2.prototype.Update = function () {
             _super.prototype.Update.call(this);
         };
-        Level1.prototype.OnSceneExit = function () {
+        Level2.prototype.OnSceneExit = function () {
         };
-        Level1.prototype.OnLevelCompleted = function () {
-            managers.GameManager.SceneManager.LoadLevel(2);
+        Level2.prototype.OnLevelCompleted = function () {
+            managers.GameManager.SceneManager.LoadLevel(3);
         };
-        return Level1;
+        return Level2;
     }(scenes.Play));
-    levels.Level1 = Level1;
+    levels.Level2 = Level2;
 })(levels || (levels = {}));
-//# sourceMappingURL=level1.js.map
+//# sourceMappingURL=level2.js.map

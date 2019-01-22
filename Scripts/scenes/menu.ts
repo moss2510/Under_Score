@@ -52,7 +52,7 @@ module scenes {
         //#region UI Handler
         private _onStartClicked(): void {
             console.log("Start Game");
-            managers.GameManager.SceneManager.ChangeScene(config.Scene.Play);
+            managers.GameManager.SceneManager.LoadLevel(1);
         }
         
         private _onMuteClicked(): void {

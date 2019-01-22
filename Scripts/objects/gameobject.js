@@ -95,6 +95,11 @@ var objects;
             component.SetOwner(this);
             this._components.push(component);
         };
+        GameObject.prototype.Instanitate = function (gameObject) {
+            if (utils.Util.NotNullOrUndefined(this._currentLevel)) {
+                this._currentLevel.AddGameObject(gameObject);
+            }
+        };
         GameObject.prototype._updateComponents = function () {
             for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
                 var component = _a[_i];

@@ -13,36 +13,34 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var levels;
 (function (levels) {
-    var Level1 = /** @class */ (function (_super) {
-        __extends(Level1, _super);
-        function Level1(bg) {
-            var _this = _super.call(this, "Floor 1", bg) || this;
+    var Level3 = /** @class */ (function (_super) {
+        __extends(Level3, _super);
+        function Level3(bg) {
+            var _this = _super.call(this, "Rooftop", bg) || this;
             _this._numberOfObstacles = 10;
             return _this;
         }
-        Level1.prototype.Init = function () {
-            this.SetLevelSize(1600, 2400);
+        Level3.prototype.Init = function () {
+            this.SetLevelSize(1600, 1200);
             this.SetLevelBoundarySize(4);
             this._player = new objects.Player();
-            for (var i = 0; i < this._numberOfObstacles; i++) {
-                this.AddGameObject(new objects.Obstacle());
-            }
+            this.AddGameObject(new objects.Obstacle());
             this.AddGameObject(this._player);
         };
-        Level1.prototype.OnSceneEnter = function () {
+        Level3.prototype.OnSceneEnter = function () {
             console.log("Loading " + this.Name + "...");
             this.Init();
         };
-        Level1.prototype.Update = function () {
+        Level3.prototype.Update = function () {
             _super.prototype.Update.call(this);
         };
-        Level1.prototype.OnSceneExit = function () {
+        Level3.prototype.OnSceneExit = function () {
         };
-        Level1.prototype.OnLevelCompleted = function () {
-            managers.GameManager.SceneManager.LoadLevel(2);
+        Level3.prototype.OnLevelCompleted = function () {
+            managers.GameManager.SceneManager.ChangeScene(config.Scene.Menu);
         };
-        return Level1;
+        return Level3;
     }(scenes.Play));
-    levels.Level1 = Level1;
+    levels.Level3 = Level3;
 })(levels || (levels = {}));
-//# sourceMappingURL=level1.js.map
+//# sourceMappingURL=level3.js.map

@@ -22,7 +22,7 @@ To Install Dependencies(CreateJs libaries) And devDependencies(IntelliSense for 
 
 ### Auto Compile
 
-Press `Ctrl+Shift+B` to open tasks and select tsc: watch - tsconfig.json
+Press `Ctrl+Shift+B` to open tasks and select `tsc: watch - tsconfig.json`
 
 This will auto-compile the TS file to JS file
 

@@ -13,7 +13,9 @@ var managers;
             { id: "player", src: "./Assets/sprites/player/placeholder-player.png" },
             { id: "obstacle", src: "./Assets/sprites/player/placeholder-obstacle.png" },
             // Level Backgrounds
-            { id: "level1", src: "./Assets/sprites/environment/level1.png" }
+            { id: "level1", src: "./Assets/sprites/environment/level1.png" },
+            { id: "level2", src: "./Assets/sprites/environment/level2.png" },
+            { id: "level3", src: "./Assets/sprites/environment/level3.png" }
         ];
         return GameManager;
     }());
