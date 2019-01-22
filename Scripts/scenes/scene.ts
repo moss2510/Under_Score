@@ -3,7 +3,15 @@ module scenes {
         private _type: config.Scene;
         private _backgroundImage: createjs.Bitmap;
 
-        get BackgroundImage() : createjs.Bitmap{
+        get ViewPortX(): number {
+            return this.x;
+        }
+
+        get ViewPortY(): number {
+            return this.y;
+        }
+
+        get BackgroundImage(): createjs.Bitmap {
             return this._backgroundImage;
         }
 

@@ -45,5 +45,14 @@ var utils;
         return Dictionary;
     }());
     utils.Dictionary = Dictionary;
+    var Util = /** @class */ (function () {
+        function Util() {
+        }
+        Util.NotNullOrUndefined = function (object) {
+            return object != null || object != undefined;
+        };
+        return Util;
+    }());
+    utils.Util = Util;
 })(utils || (utils = {}));
 //# sourceMappingURL=utils.js.map

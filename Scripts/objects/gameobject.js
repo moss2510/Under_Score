@@ -51,6 +51,16 @@ var objects;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(GameObject.prototype, "CurrentLevel", {
+            get: function () {
+                return this._currentLevel;
+            },
+            set: function (level) {
+                this._currentLevel = level;
+            },
+            enumerable: true,
+            configurable: true
+        });
         GameObject.prototype.SetPivotPoint = function (x, y) {
             this._pivotX = x;
             this._pivotY = y;
@@ -91,6 +101,22 @@ var objects;
                 if (component.Owner == this) {
                     component.Update();
                 }
+            }
+        };
+        // Methods to Override
+        GameObject.prototype.CheckBoundary = function () {
+            var level = managers.GameManager.CurrentLevel;
+            if (this.x > level.LevelWidth - level.LevelBoundarySize - this.PivotX) {
+                this.x = level.LevelWidth - level.LevelBoundarySize - this.PivotX;
+            }
+            if (this.x < this.PivotX + level.LevelBoundarySize) {
+                this.x = this.PivotX + level.LevelBoundarySize;
+            }
+            if (this.y > level.LevelHeight - level.LevelBoundarySize - this.PivotY) {
+                this.y = level.LevelHeight - level.LevelBoundarySize - this.PivotY;
+            }
+            if (this.y < this.PivotY + level.LevelBoundarySize) {
+                this.y = this.PivotY + level.LevelBoundarySize;
             }
         };
         return GameObject;

@@ -21,6 +21,8 @@ var levels;
             return _this;
         }
         Level1.prototype.Init = function () {
+            this.SetLevelSize(1600, 2400);
+            this.SetLevelBoundarySize(4);
             this._player = new objects.Player();
             for (var i = 0; i < this._numberOfObstacles; i++) {
                 this.AddGameObject(new objects.Obstacle());

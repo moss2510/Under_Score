@@ -3,12 +3,14 @@ var config;
     var Key = /** @class */ (function () {
         function Key() {
         }
-        // Constant variables for keycode
+        // Keycode
         Key.LEFT = 37;
         Key.RIGHT = 39;
         Key.UP = 38;
         Key.DOWN = 40;
         Key.SPACE = 32;
+        Key.F = 70;
+        Key.G = 71;
         return Key;
     }());
     config.Key = Key;

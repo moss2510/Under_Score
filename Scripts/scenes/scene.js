@@ -22,6 +22,20 @@ var scenes;
             _this.addChild(_this._backgroundImage);
             return _this;
         }
+        Object.defineProperty(Scene.prototype, "ViewPortX", {
+            get: function () {
+                return this.x;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Scene.prototype, "ViewPortY", {
+            get: function () {
+                return this.y;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Scene.prototype, "BackgroundImage", {
             get: function () {
                 return this._backgroundImage;

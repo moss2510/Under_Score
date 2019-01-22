@@ -11,6 +11,8 @@ module objects {
 
         private _components: components.Component[] = new Array();
 
+        private _currentLevel: scenes.Play;
+
         get PivotX(): number {
             return this._pivotX;
         }
@@ -25,6 +27,14 @@ module objects {
 
         get Height(): number {
             return this._height;
+        }
+
+        get CurrentLevel(): scenes.Play {
+            return this._currentLevel;
+        }
+
+        set CurrentLevel(level: scenes.Play) {
+            this._currentLevel = level;
         }
 
         public SetPivotPoint(x: number, y: number) {
@@ -83,6 +93,26 @@ module objects {
 
         public abstract Init(): void;
         public abstract UpdateTransform(): void;
-        public abstract CheckBoundary(): void;
+
+        // Methods to Override
+        public CheckBoundary(): void {
+            let level = managers.GameManager.CurrentLevel;
+
+            if (this.x > level.LevelWidth - level.LevelBoundarySize - this.PivotX) {
+                this.x = level.LevelWidth - level.LevelBoundarySize - this.PivotX;
+            }
+
+            if (this.x < this.PivotX + level.LevelBoundarySize) {
+                this.x = this.PivotX + level.LevelBoundarySize;
+            }
+
+            if (this.y > level.LevelHeight - level.LevelBoundarySize - this.PivotY) {
+                this.y = level.LevelHeight - level.LevelBoundarySize - this.PivotY;
+            }
+
+            if (this.y < this.PivotY + level.LevelBoundarySize) {
+                this.y = this.PivotY + level.LevelBoundarySize;
+            }
+        }
     }
 }

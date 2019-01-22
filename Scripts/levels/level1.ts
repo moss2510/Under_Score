@@ -5,6 +5,9 @@ module levels {
         private _numberOfObstacles: number = 10;
 
         public Init(): void {
+            this.SetLevelSize(1600, 2400);
+            this.SetLevelBoundarySize(4);
+
             this._player = new objects.Player();
 
             for (let i = 0; i < this._numberOfObstacles; i++) {

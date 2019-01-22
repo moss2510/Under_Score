@@ -29,8 +29,6 @@ var objects;
             this.SetPivotPoint(this.Width / 2, this.Height / 2);
         };
         Player.prototype.UpdateTransform = function () {
-            // this.x = managers.GameManager.SceneManager.MouseX;
-            // this.y = managers.GameManager.SceneManager.MouseY;
             if (managers.InputManager.KeyDown(config.Key.LEFT)) {
                 this.x -= this._movementSpeed;
             }
@@ -41,20 +39,12 @@ var objects;
                 this._isJumping = true;
                 createjs.Tween.get(this).to({ y: this.y - this._jumpForce }, 300).call(this.onFinishJump);
             }
+            if (managers.InputManager.KeyDown(config.Key.F)) {
+                this.y -= this._jumpForce;
+            }
         };
         Player.prototype.CheckBoundary = function () {
-            if (this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX) {
-                this.x = managers.GameManager.SceneManager.ScreenWidth - this.PivotX;
-            }
-            if (this.x < this.PivotX) {
-                this.x = this.PivotX;
-            }
-            if (this.y > managers.GameManager.SceneManager.ScreenHeight - this.PivotY) {
-                this.y = managers.GameManager.SceneManager.ScreenHeight - this.PivotY;
-            }
-            if (this.y < this.PivotY) {
-                this.y = this.PivotY;
-            }
+            _super.prototype.CheckBoundary.call(this);
         };
         Player.prototype.onFinishJump = function () {
             var _this = this;

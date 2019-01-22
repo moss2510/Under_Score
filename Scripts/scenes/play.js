@@ -17,6 +17,9 @@ var scenes;
         __extends(Play, _super);
         function Play(name, bg) {
             var _this = _super.call(this, config.Scene.Play, bg) || this;
+            _this._levelWidth = 0;
+            _this._levelHeight = 0;
+            _this._levelBoundarySize = 0;
             _this._gameObjects = new Array();
             _this._name = name;
             return _this;
@@ -37,9 +40,38 @@ var scenes;
             this.y = managers.GameManager.CameraManager.Y;
         };
         Play.prototype.AddGameObject = function (object) {
+            object.CurrentLevel = this;
             this._gameObjects.push(object);
             this.addChild(object);
             this.Update();
+        };
+        Object.defineProperty(Play.prototype, "LevelWidth", {
+            get: function () {
+                return this._levelWidth;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Play.prototype, "LevelHeight", {
+            get: function () {
+                return this._levelHeight;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Play.prototype, "LevelBoundarySize", {
+            get: function () {
+                return this._levelBoundarySize;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Play.prototype.SetLevelSize = function (width, height) {
+            this._levelWidth = width;
+            this._levelHeight = height;
+        };
+        Play.prototype.SetLevelBoundarySize = function (newSize) {
+            this._levelBoundarySize = newSize;
         };
         return Play;
     }(scenes.Scene));

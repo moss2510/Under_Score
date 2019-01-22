@@ -51,8 +51,6 @@ var managers;
         //#endregion
         //#region Functions
         SceneManager.prototype.OnSceneEnter = function () {
-            console.log(this._currentScene.x);
-            console.log(this._currentScene.y);
         };
         SceneManager.prototype.Update = function () {
             this._stage.update();
@@ -77,15 +75,17 @@ var managers;
             var result;
             switch (type) {
                 case config.Scene.Menu:
-                    result = new scenes.Menu(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("background")));
+                    result = new scenes.Menu(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("")));
                     break;
                 case config.Scene.Play:
-                    result = new levels.Level1(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("background")));
+                    result = new levels.Level1(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level1")));
+                    managers.GameManager.CurrentLevel = result;
                     break;
                 case config.Scene.GameOver:
-                    result = new scenes.GameOver(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("background")));
+                    result = new scenes.GameOver(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("")));
                     break;
             }
+            console.log("Scene Created");
             return result;
         };
         return SceneManager;

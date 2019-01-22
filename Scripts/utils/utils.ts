@@ -57,4 +57,10 @@ module utils {
         Keys(): TKey[];
         Values(): TValue[];
     }
+
+    export class Util {
+        public static NotNullOrUndefined(object: any): boolean {
+            return object != null || object != undefined;
+        }
+    }
 }

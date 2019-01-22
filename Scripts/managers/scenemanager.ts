@@ -50,9 +50,8 @@ module managers {
 
         //#region Functions
         public OnSceneEnter(): void {
-            console.log(this._currentScene.x);
-            console.log(this._currentScene.y);
         }
+
         public Update(): void {
             this._stage.update();
             this._currentScene.Update();
@@ -78,15 +77,17 @@ module managers {
             let result: scenes.Scene;
             switch (type) {
                 case config.Scene.Menu:
-                    result = new scenes.Menu(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("background")));
+                    result = new scenes.Menu(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("")));
                     break;
                 case config.Scene.Play:
-                    result = new levels.Level1(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("background")));
+                    result = new levels.Level1(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level1")));
+                    managers.GameManager.CurrentLevel = <scenes.Play>result;
                     break;
                 case config.Scene.GameOver:
-                    result = new scenes.GameOver(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("background")));
+                    result = new scenes.GameOver(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("")));
                     break;
             }
+            console.log("Scene Created");
             return result;
         }
         //#endregion

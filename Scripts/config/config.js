@@ -10,7 +10,7 @@ var config;
     var GameInfo = /** @class */ (function () {
         function GameInfo() {
         }
-        GameInfo.GameName = "Game Name";
+        GameInfo.GameName = "Prophecies of Traps";
         GameInfo.Version = "v1.0";
         return GameInfo;
     }());

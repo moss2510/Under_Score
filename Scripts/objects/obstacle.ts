@@ -19,11 +19,10 @@ module objects{
             this.x += this._direction;
         }
         public CheckBoundary(): void {
-            if (this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX || this.x < this.PivotX) {
+            super.CheckBoundary();
+
+            if (this.x >= this.CurrentLevel.LevelWidth - this.CurrentLevel.LevelBoundarySize - this.PivotX || this.x <= this.PivotX + this.CurrentLevel.LevelBoundarySize) {
                 this._direction *= -1;
-            }
-            if(this.y > managers.GameManager.SceneManager.ScreenHeight - this.PivotY){
-                this.y = managers.GameManager.SceneManager.ScreenHeight - this.PivotY;
             }
         }
     }
