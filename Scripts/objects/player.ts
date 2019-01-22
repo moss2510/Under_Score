@@ -8,8 +8,16 @@ module objects {
 
         constructor() {
             super("player");
+            // Add Rigidbody to allow gravity
             let rb2d = new components.Rigidbody2D();
             this.AddComponent(rb2d);
+            // Add Health
+            let hc = new components.HealthComponent(100);
+            this.AddComponent(hc);
+            // Add Shield
+            let sc = new components.HealthComponent(80);
+            this.AddComponent(hc);
+
             managers.GameManager.CameraManager.Follow(this);
         }
 

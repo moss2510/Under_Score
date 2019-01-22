@@ -11,10 +11,13 @@ module levels {
             this._player = new objects.Player();
 
             for (let i = 0; i < this._numberOfObstacles; i++) {
-                this.AddGameObject(new objects.Obstacle());
+                let enemy = new objects.Obstacle();
+                this.AddGameObject(enemy);
             }
 
             this.AddGameObject(this._player);
+
+            this.AddInGameGUIControl(new controls.ProgressBar());
         }
 
         constructor(bg: createjs.Bitmap) {

@@ -20,8 +20,15 @@ var objects;
             _this._movementSpeed = 5;
             _this._jumpForce = 100;
             _this._isJumping = false;
+            // Add Rigidbody to allow gravity
             var rb2d = new components.Rigidbody2D();
             _this.AddComponent(rb2d);
+            // Add Health
+            var hc = new components.HealthComponent(100);
+            _this.AddComponent(hc);
+            // Add Shield
+            var sc = new components.HealthComponent(80);
+            _this.AddComponent(hc);
             managers.GameManager.CameraManager.Follow(_this);
             return _this;
         }

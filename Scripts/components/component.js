@@ -118,5 +118,41 @@ var components;
         return Rigidbody2D;
     }(components.Component));
     components.Rigidbody2D = Rigidbody2D;
+    var HealthComponent = /** @class */ (function (_super) {
+        __extends(HealthComponent, _super);
+        function HealthComponent(maxHP) {
+            var _this = _super.call(this) || this;
+            _this._maxHP = maxHP;
+            _this._currentHP = _this._maxHP;
+            return _this;
+        }
+        Object.defineProperty(HealthComponent.prototype, "CurrentHP", {
+            get: function () {
+                return this._currentHP;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        HealthComponent.prototype.Reduce = function (amount) {
+            if (this._currentHP > 0) {
+                this._currentHP -= amount;
+            }
+            else {
+                this._currentHP = 0;
+            }
+        };
+        HealthComponent.prototype.Add = function (amount) {
+            if (this._currentHP + amount > this._maxHP) {
+                this._currentHP = this._maxHP;
+            }
+            else {
+                this._currentHP += amount;
+            }
+        };
+        HealthComponent.prototype.Update = function () {
+        };
+        return HealthComponent;
+    }(components.Component));
+    components.HealthComponent = HealthComponent;
 })(components || (components = {}));
 //# sourceMappingURL=component.js.map

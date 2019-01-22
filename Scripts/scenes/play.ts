@@ -11,6 +11,7 @@ module scenes {
         private _levelCompleted;
 
         private _gameObjects: objects.GameObject[] = new Array();
+        private _guiControls: controls.InGameGUIControl[] = new Array();
 
         get Name(): string {
             return this._name;
@@ -40,6 +41,12 @@ module scenes {
             object.CurrentLevel = this;
             this._gameObjects.push(object);
             this.addChild(object);
+            this.Update();
+        }
+
+        public AddInGameGUIControl(control: controls.InGameGUIControl){
+            this._guiControls.push(control);
+            this.addChild(control);
             this.Update();
         }
 

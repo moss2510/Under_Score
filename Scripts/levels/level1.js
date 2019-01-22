@@ -25,9 +25,11 @@ var levels;
             this.SetLevelBoundarySize(4);
             this._player = new objects.Player();
             for (var i = 0; i < this._numberOfObstacles; i++) {
-                this.AddGameObject(new objects.Obstacle());
+                var enemy = new objects.Obstacle();
+                this.AddGameObject(enemy);
             }
             this.AddGameObject(this._player);
+            this.AddInGameGUIControl(new controls.ProgressBar());
         };
         Level1.prototype.OnSceneEnter = function () {
             console.log("Loading " + this.Name + "...");

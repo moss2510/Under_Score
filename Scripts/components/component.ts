@@ -92,4 +92,42 @@ module components {
             this.Owner.y += this._gravityScale * physics.Config.GRAVITY;
         }
     }
+
+    export class HealthComponent extends components.Component {
+
+        private _currentHP: number;
+        private _maxHP: number;
+
+        constructor(maxHP: number) {
+            super();
+            this._maxHP = maxHP;
+            this._currentHP = this._maxHP;
+        }
+
+        get CurrentHP(): number {
+            return this._currentHP;
+        }
+
+        public Reduce(amount: number): void {
+            if (this._currentHP > 0) {
+                this._currentHP -= amount;
+            }
+            else {
+                this._currentHP = 0;
+            }
+        }
+
+        public Add(amount: number): void {
+            if (this._currentHP + amount > this._maxHP) {
+                this._currentHP = this._maxHP;
+            }
+            else {
+                this._currentHP += amount;
+            }
+        }
+
+        public Update(): void {
+        }
+
+    }
 }

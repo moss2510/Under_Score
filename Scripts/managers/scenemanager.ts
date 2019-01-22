@@ -109,12 +109,13 @@ module managers {
                     result = new levels.Level1(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level1")));
                     break;
                 case 2:
-                    result = new levels.Level2(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level2")));
+                    result = new levels.Level2(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level2"))); 
                     break;
                 case 3:
-                    result = new levels.Level3(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level2")));
+                    result = new levels.Level3(new createjs.Bitmap(managers.GameManager.AssetManager.getResult("level3")));
                     break;
             }
+            managers.GameManager.CurrentLevel = result;
             console.log("Level Created");
             return result;
         }

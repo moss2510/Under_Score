@@ -21,6 +21,7 @@ var scenes;
             _this._levelHeight = 0;
             _this._levelBoundarySize = 0;
             _this._gameObjects = new Array();
+            _this._guiControls = new Array();
             _this._name = name;
             return _this;
         }
@@ -53,6 +54,11 @@ var scenes;
             object.CurrentLevel = this;
             this._gameObjects.push(object);
             this.addChild(object);
+            this.Update();
+        };
+        Play.prototype.AddInGameGUIControl = function (control) {
+            this._guiControls.push(control);
+            this.addChild(control);
             this.Update();
         };
         Object.defineProperty(Play.prototype, "LevelWidth", {
