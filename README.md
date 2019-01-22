@@ -1,26 +1,49 @@
-# Under_Score
+# Environment Set Up Guide
 
-Set Up the Environment
+The following guide will walk through on how to set up project environment.
 
-Install Node.js from https://nodejs.org/en/
-Choose 11.6.0 Latest Features
+### Lite Server
 
-Press `Ctrl+`` to open terminal
+###### Install
 
-Install All dependencies (this will install the CreateJs libaries and IntelliSense)
+Install Node.js from https://nodejs.org/en/ and Choose Latest Features
 
-```npm install```
+Start Visual Studio Code after install.
 
-Install Lite-server
+### Dependencies
 
-```npm install lite-server -g```
+###### Install
 
-# Before starting
+Install 
+
+Press `Ctrl+\`` to open terminal or `View > Terminal` or `Terminal > New Terminal`
+
+To Install Dependencies(CreateJs libaries) And devDependencies(IntelliSense for CreateJs), Type
+
+```npm install ```
+
+### Auto Compile
 
 Press `Ctrl+Shift+B` to open tasks and select tsc: watch - tsconfig.json
 
 This will auto-compile the TS file to JS file
 
-To sync the browser with the project everytime you save all automatcially, Type
+### Lite Server
+
+To automatcially sync the browser with the project everytime you save
+
+###### Install
+
+In the terminal, Type
+
+```npm install lite-server -g```
+
+Restart Visual Studio Code in order to run lite-server in the terminal
+
+###### Command
+
+To run lite-server, Type
 
 ```lite-server```
+
+
