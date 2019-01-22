@@ -14,9 +14,7 @@ Start Visual Studio Code after install.
 
 ###### Install
 
-Install 
-
-Press `Ctrl+\`` to open terminal or `View > Terminal` or `Terminal > New Terminal`
+Press `` Ctrl+` `` to open terminal or `View > Terminal` or `Terminal > New Terminal`
 
 To Install Dependencies(CreateJs libaries) And devDependencies(IntelliSense for CreateJs), Type
 
