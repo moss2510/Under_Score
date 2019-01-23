@@ -122,31 +122,31 @@ var components;
         __extends(HealthComponent, _super);
         function HealthComponent(maxHP) {
             var _this = _super.call(this) || this;
-            _this._maxHP = maxHP;
-            _this._currentHP = _this._maxHP;
+            _this._maxValue = maxHP;
+            _this._currentValue = _this._maxValue;
             return _this;
         }
-        Object.defineProperty(HealthComponent.prototype, "CurrentHP", {
+        Object.defineProperty(HealthComponent.prototype, "CurrentValue", {
             get: function () {
-                return this._currentHP;
+                return this._currentValue;
             },
             enumerable: true,
             configurable: true
         });
         HealthComponent.prototype.Reduce = function (amount) {
-            if (this._currentHP > 0) {
-                this._currentHP -= amount;
+            if (this._currentValue > 0) {
+                this._currentValue -= amount;
             }
             else {
-                this._currentHP = 0;
+                this._currentValue = 0;
             }
         };
         HealthComponent.prototype.Add = function (amount) {
-            if (this._currentHP + amount > this._maxHP) {
-                this._currentHP = this._maxHP;
+            if (this._currentValue + amount > this._maxValue) {
+                this._currentValue = this._maxValue;
             }
             else {
-                this._currentHP += amount;
+                this._currentValue += amount;
             }
         };
         HealthComponent.prototype.Update = function () {

@@ -16,8 +16,6 @@ module levels {
             }
 
             this.AddGameObject(this._player);
-
-            this.AddInGameGUIControl(new controls.ProgressBar());
         }
 
         constructor(bg: createjs.Bitmap) {

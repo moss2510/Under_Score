@@ -29,7 +29,6 @@ var levels;
                 this.AddGameObject(enemy);
             }
             this.AddGameObject(this._player);
-            this.AddInGameGUIControl(new controls.ProgressBar());
         };
         Level1.prototype.OnSceneEnter = function () {
             console.log("Loading " + this.Name + "...");

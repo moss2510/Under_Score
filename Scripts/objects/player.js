@@ -21,15 +21,21 @@ var objects;
             _this._jumpForce = 100;
             _this._isJumping = false;
             // Add Rigidbody to allow gravity
-            var rb2d = new components.Rigidbody2D();
-            _this.AddComponent(rb2d);
+            _this._rb2d = new components.Rigidbody2D();
+            _this.AddComponent(_this._rb2d);
             // Add Health
-            var hc = new components.HealthComponent(100);
-            _this.AddComponent(hc);
+            _this._hp = new components.HealthComponent(100);
+            _this.AddComponent(_this._hp);
             // Add Shield
-            var sc = new components.HealthComponent(80);
-            _this.AddComponent(hc);
+            _this._shield = new components.HealthComponent(80);
+            _this.AddComponent(_this._shield);
             managers.GameManager.CameraManager.Follow(_this);
+            _this._healthBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 24, 150, 20, "black", "red", 2, "#D3D3D3");
+            _this._healthBar.Value = _this._hp.CurrentValue;
+            _this._shieldBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 54, 150, 20, "black", "cyan", 2, "#D3D3D3");
+            _this._shieldBar.Value = _this._shield.CurrentValue;
+            managers.GameManager.CurrentLevel.AddInGameGUIControl(_this._healthBar);
+            managers.GameManager.CurrentLevel.AddInGameGUIControl(_this._shieldBar);
             return _this;
         }
         Player.prototype.Init = function () {
@@ -48,6 +54,11 @@ var objects;
             }
             if (managers.InputManager.KeyDown(config.Key.F)) {
                 this.y -= this._jumpForce;
+            }
+            // Testing
+            if (managers.InputManager.KeyUp(config.Key.G)) {
+                this._hp.Reduce(10);
+                this._healthBar.Value = this._hp.CurrentValue;
             }
         };
         Player.prototype.CheckBoundary = function () {

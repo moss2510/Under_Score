@@ -11,7 +11,18 @@ module scenes {
         private _levelCompleted;
 
         private _gameObjects: objects.GameObject[] = new Array();
-        private _guiControls: controls.InGameGUIControl[] = new Array();
+        private _guiControls: createjs.Container[] = new Array();
+
+        private _guiLayer: createjs.Container;
+        private _gameLayer: createjs.Container;
+
+        get GUILayer(): createjs.Container {
+            return this._guiLayer;
+        }
+
+        get GameLayer(): createjs.Container {
+            return this._gameLayer;
+        }
 
         get Name(): string {
             return this._name;
@@ -22,16 +33,19 @@ module scenes {
         }
 
         constructor(name: string, bg: createjs.Bitmap) {
-            super(config.Scene.Play, bg);
+            super(config.Scene.Play);
             this._name = name;
+            this._gameLayer = new createjs.Container();
+            this._gameLayer.addChild(bg);
+            this._guiLayer = new createjs.Container();
+            this.addChild(this._gameLayer);
+            this.addChild(this._guiLayer);
         }
 
         public Update(): void {
             for (let gameObject of this._gameObjects) {
                 gameObject.Update();
             }
-            this.x = managers.GameManager.CameraManager.X;
-            this.y = managers.GameManager.CameraManager.Y;
             if (this._levelCompleted) {
                 this.OnLevelCompleted();
             }
@@ -40,13 +54,13 @@ module scenes {
         public AddGameObject(object: objects.GameObject) {
             object.CurrentLevel = this;
             this._gameObjects.push(object);
-            this.addChild(object);
+            this._gameLayer.addChild(object);
             this.Update();
         }
 
-        public AddInGameGUIControl(control: controls.InGameGUIControl){
+        public AddInGameGUIControl(control: createjs.Container) {
             this._guiControls.push(control);
-            this.addChild(control);
+            this._guiLayer.addChild(control);
             this.Update();
         }
 

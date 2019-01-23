@@ -16,15 +16,34 @@ var scenes;
     var Play = /** @class */ (function (_super) {
         __extends(Play, _super);
         function Play(name, bg) {
-            var _this = _super.call(this, config.Scene.Play, bg) || this;
+            var _this = _super.call(this, config.Scene.Play) || this;
             _this._levelWidth = 0;
             _this._levelHeight = 0;
             _this._levelBoundarySize = 0;
             _this._gameObjects = new Array();
             _this._guiControls = new Array();
             _this._name = name;
+            _this._gameLayer = new createjs.Container();
+            _this._gameLayer.addChild(bg);
+            _this._guiLayer = new createjs.Container();
+            _this.addChild(_this._gameLayer);
+            _this.addChild(_this._guiLayer);
             return _this;
         }
+        Object.defineProperty(Play.prototype, "GUILayer", {
+            get: function () {
+                return this._guiLayer;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Play.prototype, "GameLayer", {
+            get: function () {
+                return this._gameLayer;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Play.prototype, "Name", {
             get: function () {
                 return this._name;
@@ -44,8 +63,6 @@ var scenes;
                 var gameObject = _a[_i];
                 gameObject.Update();
             }
-            this.x = managers.GameManager.CameraManager.X;
-            this.y = managers.GameManager.CameraManager.Y;
             if (this._levelCompleted) {
                 this.OnLevelCompleted();
             }
@@ -53,12 +70,12 @@ var scenes;
         Play.prototype.AddGameObject = function (object) {
             object.CurrentLevel = this;
             this._gameObjects.push(object);
-            this.addChild(object);
+            this._gameLayer.addChild(object);
             this.Update();
         };
         Play.prototype.AddInGameGUIControl = function (control) {
             this._guiControls.push(control);
-            this.addChild(control);
+            this._guiLayer.addChild(control);
             this.Update();
         };
         Object.defineProperty(Play.prototype, "LevelWidth", {

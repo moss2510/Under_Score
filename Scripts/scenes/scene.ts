@@ -19,7 +19,7 @@ module scenes {
             return this._type;
         }
 
-        constructor(type: config.Scene, backgroundImage: createjs.Bitmap) {
+        constructor(type: config.Scene, backgroundImage?: createjs.Bitmap) {
             super();
             this._type = type;
             this._backgroundImage = backgroundImage;

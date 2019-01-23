@@ -95,34 +95,34 @@ module components {
 
     export class HealthComponent extends components.Component {
 
-        private _currentHP: number;
-        private _maxHP: number;
+        private _currentValue: number;
+        private _maxValue: number;
 
         constructor(maxHP: number) {
             super();
-            this._maxHP = maxHP;
-            this._currentHP = this._maxHP;
+            this._maxValue = maxHP;
+            this._currentValue = this._maxValue;
         }
 
-        get CurrentHP(): number {
-            return this._currentHP;
+        get CurrentValue(): number {
+            return this._currentValue;
         }
 
         public Reduce(amount: number): void {
-            if (this._currentHP > 0) {
-                this._currentHP -= amount;
+            if (this._currentValue > 0) {
+                this._currentValue -= amount;
             }
             else {
-                this._currentHP = 0;
+                this._currentValue = 0;
             }
         }
 
         public Add(amount: number): void {
-            if (this._currentHP + amount > this._maxHP) {
-                this._currentHP = this._maxHP;
+            if (this._currentValue + amount > this._maxValue) {
+                this._currentValue = this._maxValue;
             }
             else {
-                this._currentHP += amount;
+                this._currentValue += amount;
             }
         }
 
