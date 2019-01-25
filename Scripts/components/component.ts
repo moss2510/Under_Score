@@ -95,39 +95,59 @@ module components {
 
     export class HealthComponent extends components.Component {
 
-        private _currentValue: number;
-        private _maxValue: number;
+        private _value: number = 0;
+        private _maxValue: number = 0;
+        private _regenerateRate: number = 0;
+        private _progressBar: controls.ProgressBar;
 
-        constructor(maxHP: number) {
+        constructor(maxHP: number, progressBar?: controls.ProgressBar) {
             super();
             this._maxValue = maxHP;
-            this._currentValue = this._maxValue;
+            this._value = this._maxValue;
+            this._progressBar = progressBar;
         }
 
-        get CurrentValue(): number {
-            return this._currentValue;
+        set ProgressBar(progressBar: controls.ProgressBar) {
+            this._progressBar = progressBar;
+        }
+
+        get Value(): number {
+            return this._value;
+        }
+
+        get MaxValue(): number {
+            return this._maxValue;
+        }
+
+        get RegenerateRate(): number {
+            return this._regenerateRate;
+        }
+        set RegenerateRate(rate: number) {
+            this._regenerateRate = rate;
         }
 
         public Reduce(amount: number): void {
-            if (this._currentValue > 0) {
-                this._currentValue -= amount;
+            if (this._value > 0) {
+                this._value -= amount;
             }
             else {
-                this._currentValue = 0;
+                this._value = 0;
             }
         }
 
         public Add(amount: number): void {
-            if (this._currentValue + amount > this._maxValue) {
-                this._currentValue = this._maxValue;
+            if (this._value + amount > this._maxValue) {
+                this._value = this._maxValue;
             }
             else {
-                this._currentValue += amount;
+                this._value += amount;
             }
         }
 
         public Update(): void {
+            if (this._regenerateRate != 0 && this._value < this._maxValue) {
+                this._value += this._regenerateRate;
+            }
         }
-
     }
 }

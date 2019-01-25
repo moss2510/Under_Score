@@ -25,15 +25,17 @@ var objects;
             _this.AddComponent(_this._rb2d);
             // Add Health
             _this._hp = new components.HealthComponent(100);
+            _this._hp.RegenerateRate = 0.1;
             _this.AddComponent(_this._hp);
             // Add Shield
             _this._shield = new components.HealthComponent(80);
+            _this._shield.RegenerateRate = 0.1;
             _this.AddComponent(_this._shield);
             managers.GameManager.CameraManager.Follow(_this);
-            _this._healthBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 24, 150, 20, "black", "red", 2, "#D3D3D3");
-            _this._healthBar.Value = _this._hp.CurrentValue;
-            _this._shieldBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 54, 150, 20, "black", "cyan", 2, "#D3D3D3");
-            _this._shieldBar.Value = _this._shield.CurrentValue;
+            _this._healthBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 24, 150, 20, _this._hp.Value, "black", "red", 2, "#D3D3D3");
+            _this._healthBar.Value = 100;
+            _this._shieldBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 54, 150, 20, _this._shield.Value, "black", "cyan", 2, "#D3D3D3");
+            _this._shieldBar.Value = _this._shield.Value;
             managers.GameManager.CurrentLevel.AddInGameGUIControl(_this._healthBar);
             managers.GameManager.CurrentLevel.AddInGameGUIControl(_this._shieldBar);
             return _this;
@@ -58,7 +60,7 @@ var objects;
             // Testing
             if (managers.InputManager.KeyUp(config.Key.G)) {
                 this._hp.Reduce(10);
-                this._healthBar.Value = this._hp.CurrentValue;
+                this._healthBar.Value = this._hp.Value;
             }
         };
         Player.prototype.CheckBoundary = function () {

@@ -28,11 +28,11 @@ module controls {
         private _borderColor: string = "black";
 
         // Control Properties
-        private _currentValue = 0;
+        private _value = 0;
         private _maxValue = 100;
 
         get Value(): number {
-            return this._currentValue;
+            return this._value;
         }
 
         get MaxValue(): number {
@@ -43,16 +43,25 @@ module controls {
             if (value < 0 || value > this._maxValue) {
                 return;
             }
-            this._currentValue = value;
-            this.Init();
+            this._value = value;
+            // The regenerate speed is slower on increase and faster on decrease
+            createjs.Tween.get(this._foreground).to({ scaleX: this._value / this._maxValue }, (value < this._value) ? 1000 : 100, createjs.Ease.quadIn);
         }
 
-        constructor(x: number, y: number, width: number, height: number, backgroundColor?: string, foregroundColor?: string, borderWidth?: number, borderColor?: string) {
+        set MaxValue(maxValue: number) {
+            if (maxValue < 0) {
+                return;
+            }
+            this._value = maxValue;
+        }
+
+        constructor(x: number, y: number, width: number, height: number, maxValue: number, backgroundColor?: string, foregroundColor?: string, borderWidth?: number, borderColor?: string) {
             super();
             this._x = x;
             this._y = y;
             this._width = width;
             this._height = height;
+            this._maxValue = maxValue;
             this._backgroundColor = backgroundColor;
             this._foregroundColor = foregroundColor;
             this._borderWidth = borderWidth;
@@ -71,7 +80,7 @@ module controls {
             this._background.graphics.beginFill(this._backgroundColor).drawRect(0, 0, this._width, this._height);
 
             this._foreground = new createjs.Shape();
-            this._foreground.set({ x: this._x + this._borderWidth, y: this._y + this._borderWidth, scaleX: this._currentValue / this._maxValue });
+            this._foreground.set({ x: this._x + this._borderWidth, y: this._y + this._borderWidth, scaleX: this._value / this._maxValue });
             this._foreground.graphics.beginFill(this._foregroundColor).drawRect(0, 0, this._width, this._height);
 
             this.addChild(this._border);
@@ -80,7 +89,6 @@ module controls {
         }
 
         public Update(): void {
-            createjs.Tween.get(this._foreground).to({ scaleX: this._currentValue / this._maxValue }, 1000, createjs.Ease.quadIn);
         }
 
         public Increase(amount: number): void {
@@ -88,7 +96,7 @@ module controls {
             if (amount < 0) {
                 return;
             }
-            if (this._currentValue + amount < this._maxValue) {
+            if (this._value + amount < this._maxValue) {
                 this.Value += amount;
             }
             else {
@@ -101,7 +109,7 @@ module controls {
             if (amount < 0) {
                 return;
             }
-            if (this._currentValue - amount > 0) {
+            if (this._value - amount > 0) {
                 this.Value -= amount;
             }
             else {

@@ -120,36 +120,67 @@ var components;
     components.Rigidbody2D = Rigidbody2D;
     var HealthComponent = /** @class */ (function (_super) {
         __extends(HealthComponent, _super);
-        function HealthComponent(maxHP) {
+        function HealthComponent(maxHP, progressBar) {
             var _this = _super.call(this) || this;
+            _this._value = 0;
+            _this._maxValue = 0;
+            _this._regenerateRate = 0;
             _this._maxValue = maxHP;
-            _this._currentValue = _this._maxValue;
+            _this._value = _this._maxValue;
+            _this._progressBar = progressBar;
             return _this;
         }
-        Object.defineProperty(HealthComponent.prototype, "CurrentValue", {
+        Object.defineProperty(HealthComponent.prototype, "ProgressBar", {
+            set: function (progressBar) {
+                this._progressBar = progressBar;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(HealthComponent.prototype, "Value", {
             get: function () {
-                return this._currentValue;
+                return this._value;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(HealthComponent.prototype, "MaxValue", {
+            get: function () {
+                return this._maxValue;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(HealthComponent.prototype, "RegenerateRate", {
+            get: function () {
+                return this._regenerateRate;
+            },
+            set: function (rate) {
+                this._regenerateRate = rate;
             },
             enumerable: true,
             configurable: true
         });
         HealthComponent.prototype.Reduce = function (amount) {
-            if (this._currentValue > 0) {
-                this._currentValue -= amount;
+            if (this._value > 0) {
+                this._value -= amount;
             }
             else {
-                this._currentValue = 0;
+                this._value = 0;
             }
         };
         HealthComponent.prototype.Add = function (amount) {
-            if (this._currentValue + amount > this._maxValue) {
-                this._currentValue = this._maxValue;
+            if (this._value + amount > this._maxValue) {
+                this._value = this._maxValue;
             }
             else {
-                this._currentValue += amount;
+                this._value += amount;
             }
         };
         HealthComponent.prototype.Update = function () {
+            if (this._regenerateRate != 0 && this._value < this._maxValue) {
+                this._value += this._regenerateRate;
+            }
         };
         return HealthComponent;
     }(components.Component));
