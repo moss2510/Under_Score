@@ -20,6 +20,13 @@ var managers;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(SceneManager.prototype, "CurrentStage", {
+            get: function () {
+                return this._stage;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(SceneManager.prototype, "ScreenWidth", {
             get: function () {
                 return this._screenWidth;

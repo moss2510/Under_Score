@@ -24,6 +24,10 @@ module scenes {
             return this._gameLayer;
         }
 
+        get GameObjects(): objects.GameObject[] {
+            return this._gameObjects;
+        }
+
         get Name(): string {
             return this._name;
         }

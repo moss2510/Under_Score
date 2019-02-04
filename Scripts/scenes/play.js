@@ -44,6 +44,13 @@ var scenes;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Play.prototype, "GameObjects", {
+            get: function () {
+                return this._gameObjects;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Play.prototype, "Name", {
             get: function () {
                 return this._name;

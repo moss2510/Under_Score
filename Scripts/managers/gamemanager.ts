@@ -13,8 +13,9 @@ module managers {
             // UI - In Game
 
             // Game Objects
-            { id: "spritesheet_player", src: "./Assets/sprites/player/Fireman/SpriteSheet_Player.png" },
+            { id: "spritesheet_player", src: "./Assets/sprites/player/Fireman/sprites/spritesheet_fireman.png" },
             { id: "spritesheet_obstacle", src: "./Assets/sprites/player/placeholder-obstacle.png" },
+            { id: "sprite_platform", src: "./Assets/sprites/environment/platform.png" },
 
             // Level Backgrounds
             { id: "level1", src: "./Assets/sprites/environment/level1.png" },

@@ -150,4 +150,38 @@ module components {
             }
         }
     }
+
+    export class Collider extends components.Component {
+
+        private _x: number;
+        private _y: number;
+        private _width: number;
+        private _height: number;
+
+        private _border: createjs.Shape;
+        get Border(): createjs.Shape {
+            return this._border;
+        }
+
+        constructor(x: number, y: number, width: number, height: number) {
+            super();
+            this._x = x;
+            this._y = y;
+            this._width = width;
+            this._height = height;
+            this._border = new createjs.Shape();
+            this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(this._x + 1, this._y + 1, this._width + 1, this._height + 1).endStroke();
+            managers.GameManager.CurrentLevel.GameLayer.addChild(this._border);
+        }
+
+        public SetOwner(owner: objects.GameObject): void {
+            super.SetOwner(owner);
+        }
+
+
+        public Update(): void {
+           // this._border.x = this.Owner.x;
+           // this._border.y = this.Owner.y;
+        }
+    }
 }

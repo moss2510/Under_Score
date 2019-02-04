@@ -185,5 +185,35 @@ var components;
         return HealthComponent;
     }(components.Component));
     components.HealthComponent = HealthComponent;
+    var Collider = /** @class */ (function (_super) {
+        __extends(Collider, _super);
+        function Collider(x, y, width, height) {
+            var _this = _super.call(this) || this;
+            _this._x = x;
+            _this._y = y;
+            _this._width = width;
+            _this._height = height;
+            _this._border = new createjs.Shape();
+            _this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(_this._x + 1, _this._y + 1, _this._width + 1, _this._height + 1).endStroke();
+            managers.GameManager.CurrentLevel.GameLayer.addChild(_this._border);
+            return _this;
+        }
+        Object.defineProperty(Collider.prototype, "Border", {
+            get: function () {
+                return this._border;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Collider.prototype.SetOwner = function (owner) {
+            _super.prototype.SetOwner.call(this, owner);
+        };
+        Collider.prototype.Update = function () {
+            // this._border.x = this.Owner.x;
+            // this._border.y = this.Owner.y;
+        };
+        return Collider;
+    }(components.Component));
+    components.Collider = Collider;
 })(components || (components = {}));
 //# sourceMappingURL=component.js.map

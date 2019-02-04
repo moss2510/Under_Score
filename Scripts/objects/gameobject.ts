@@ -3,6 +3,8 @@ module objects {
 
         private _transform: components.Transform;
 
+        protected myX: number;
+
         private _width: number;
         private _height: number;
 
@@ -66,7 +68,7 @@ module objects {
             this.regY = y;
         }
 
-        constructor(width: number, height: number, animationData: object) {
+        constructor(width: number, height: number, animationData?: object) {
             super();
             this._width = width;
             this._height = height;
@@ -118,6 +120,7 @@ module objects {
 
         public abstract Init(): void;
         public abstract UpdateTransform(): void;
+        public abstract OnCollisionEnter(other: objects.GameObject): void;
 
         // Methods to Override
         public CheckBoundary(): void {

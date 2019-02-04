@@ -21,13 +21,18 @@ var levels;
             return _this;
         }
         Level1.prototype.Init = function () {
-            this.SetLevelSize(1600, 2400);
-            this.SetLevelBoundarySize(4);
+            this.SetLevelSize(1920, 1080);
+            this.SetLevelBoundarySize(1);
             this._player = new objects.Player();
             for (var i = 0; i < this._numberOfObstacles; i++) {
                 var enemy = new objects.Obstacle();
                 this.AddGameObject(enemy);
             }
+            this.AddGameObject(new objects.Platform(0, 78, managers.GameManager.CurrentLevel.LevelWidth - 1, 23));
+            this.AddGameObject(new objects.Platform(0, 336, 1770, 23));
+            this.AddGameObject(new objects.Platform(0, 540, managers.GameManager.CurrentLevel.LevelWidth - 1, 23));
+            this.AddGameObject(new objects.Platform(0, 767, 880, 23));
+            this.AddGameObject(new objects.Platform(1020, 765, 900, 23));
             this.AddGameObject(this._player);
         };
         Level1.prototype.OnSceneEnter = function () {

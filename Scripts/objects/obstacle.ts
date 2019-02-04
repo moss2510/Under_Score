@@ -32,5 +32,11 @@ module objects{
                 this._direction *= -1;
             }
         }
+
+        public OnCollisionEnter(other: objects.GameObject){
+            if(other.name == "test"){
+
+            }
+        }
     }
 }

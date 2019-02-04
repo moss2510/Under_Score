@@ -43,6 +43,10 @@ var objects;
                 this._direction *= -1;
             }
         };
+        Obstacle.prototype.OnCollisionEnter = function (other) {
+            if (other.name == "test") {
+            }
+        };
         return Obstacle;
     }(objects.GameObject));
     objects.Obstacle = Obstacle;
