@@ -16,7 +16,14 @@ var objects;
     var Obstacle = /** @class */ (function (_super) {
         __extends(Obstacle, _super);
         function Obstacle() {
-            var _this = _super.call(this, "obstacle") || this;
+            var _this = _super.call(this, 32, 32, {
+                framerate: 10,
+                images: [managers.GameManager.AssetManager.getResult("spritesheet_obstacle")],
+                frames: { width: 32, height: 32 },
+                animations: {
+                    stand: 0
+                }
+            }) || this;
             _this._direction = 1;
             return _this;
         }

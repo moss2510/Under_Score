@@ -4,7 +4,14 @@ module objects{
         private _direction : number = 1;
 
         constructor(){
-            super("obstacle");
+            super(32, 32, {
+                framerate: 10,
+                images: [managers.GameManager.AssetManager.getResult("spritesheet_obstacle")],
+                frames: { width: 32, height: 32 },
+                animations: {
+                    stand: 0
+                }
+            });
         }
 
         public Init(): void {

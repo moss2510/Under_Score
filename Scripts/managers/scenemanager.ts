@@ -20,7 +20,7 @@ module managers {
             this._screenHeight = this._canvas.height;
 
             this._stage = new createjs.Stage(this._canvas);
-
+            
             this._camera = new managers.CameraManager();
             managers.GameManager.CameraManager = this._camera;
         }

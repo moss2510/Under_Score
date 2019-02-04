@@ -15,10 +15,13 @@ var objects;
 (function (objects) {
     var GameObject = /** @class */ (function (_super) {
         __extends(GameObject, _super);
-        function GameObject(imageId) {
-            var _this = _super.call(this, managers.GameManager.AssetManager.getResult(imageId)) || this;
+        function GameObject(width, height, animationData) {
+            var _this = _super.call(this) || this;
             _this._components = new Array();
-            _this._beforeInit();
+            _this._width = width;
+            _this._height = height;
+            _this._animationData = animationData;
+            _this.Sprite = new createjs.Sprite(new createjs.SpriteSheet(_this._animationData));
             _this.Init();
             _this._afterInit();
             return _this;
@@ -61,16 +64,29 @@ var objects;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(GameObject.prototype, "Sprite", {
+            get: function () {
+                return this._sprite;
+            },
+            set: function (sprite) {
+                this._sprite = sprite;
+                this._sprite.regX = this._width / 2; // For Filp Sprite
+                this._sprite.regY = this._height / 2;
+                this.removeAllChildren();
+                this.addChild(this._sprite);
+            },
+            enumerable: true,
+            configurable: true
+        });
+        // Direction 1 for RIGHT, -1 for LEFT
+        GameObject.prototype.FlipSprite = function (direction) {
+            this._sprite.scaleX = direction;
+        };
         GameObject.prototype.SetPivotPoint = function (x, y) {
             this._pivotX = x;
             this._pivotY = y;
             this.regX = x;
             this.regY = y;
-        };
-        GameObject.prototype._beforeInit = function () {
-            this._width = this.getBounds().width;
-            this._height = this.getBounds().height;
-            //this._transform = new components.Transform(new components.Point(0, 0), new components.Point(0, 0));
         };
         GameObject.prototype._afterInit = function () {
             if (this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX) {
@@ -111,21 +127,25 @@ var objects;
         // Methods to Override
         GameObject.prototype.CheckBoundary = function () {
             var level = managers.GameManager.CurrentLevel;
-            if (this.x > level.LevelWidth - level.LevelBoundarySize - this.PivotX) {
-                this.x = level.LevelWidth - level.LevelBoundarySize - this.PivotX;
+            var rightBoundary = level.LevelWidth - level.LevelBoundarySize - this.PivotX + this.Sprite.regX;
+            var leftBoundary = this.PivotX + level.LevelBoundarySize + this.Sprite.regX;
+            var topBoundary = this.PivotY + level.LevelBoundarySize + this.Sprite.regY;
+            var bottomBoundary = level.LevelHeight - level.LevelBoundarySize - this.PivotY + this.Sprite.regY;
+            if (this.x > rightBoundary) {
+                this.x = rightBoundary;
             }
-            if (this.x < this.PivotX + level.LevelBoundarySize) {
-                this.x = this.PivotX + level.LevelBoundarySize;
+            if (this.x < leftBoundary) {
+                this.x = leftBoundary;
             }
-            if (this.y > level.LevelHeight - level.LevelBoundarySize - this.PivotY) {
-                this.y = level.LevelHeight - level.LevelBoundarySize - this.PivotY;
+            if (this.y > bottomBoundary) {
+                this.y = bottomBoundary;
             }
-            if (this.y < this.PivotY + level.LevelBoundarySize) {
-                this.y = this.PivotY + level.LevelBoundarySize;
+            if (this.y < topBoundary) {
+                this.y = topBoundary;
             }
         };
         return GameObject;
-    }(createjs.Bitmap));
+    }(createjs.Container));
     objects.GameObject = GameObject;
 })(objects || (objects = {}));
 //# sourceMappingURL=gameobject.js.map

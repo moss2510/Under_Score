@@ -13,8 +13,8 @@ module managers {
             // UI - In Game
 
             // Game Objects
-            { id: "player", src: "./Assets/sprites/player/placeholder-player.png" },
-            { id: "obstacle", src: "./Assets/sprites/player/placeholder-obstacle.png" },
+            { id: "spritesheet_player", src: "./Assets/sprites/player/Fireman/SpriteSheet_Player.png" },
+            { id: "spritesheet_obstacle", src: "./Assets/sprites/player/placeholder-obstacle.png" },
 
             // Level Backgrounds
             { id: "level1", src: "./Assets/sprites/environment/level1.png" },
