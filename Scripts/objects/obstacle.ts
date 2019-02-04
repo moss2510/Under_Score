@@ -1,9 +1,9 @@
-module objects{
-    export class Obstacle extends GameObject{
+module objects {
+    export class Obstacle extends GameObject {
 
-        private _direction : number = 1;
+        private _direction: number = 1;
 
-        constructor(){
+        constructor() {
             super(32, 32, {
                 framerate: 10,
                 images: [managers.GameManager.AssetManager.getResult("spritesheet_obstacle")],
@@ -33,9 +33,9 @@ module objects{
             }
         }
 
-        public OnCollisionEnter(other: objects.GameObject){
-            if(other.name == "test"){
-
+        public OnCollisionEnter(other: objects.GameObject) {
+            if (other.name == "test") {
+                
             }
         }
     }
