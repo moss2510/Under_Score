@@ -16,6 +16,7 @@ module managers {
             { id: "spritesheet_player", src: "./Assets/sprites/player/Fireman/sprites/spritesheet_fireman.png" },
             { id: "spritesheet_obstacle", src: "./Assets/sprites/player/placeholder-obstacle.png" },
             { id: "sprite_platform", src: "./Assets/sprites/environment/platform.png" },
+            { id: "sprite_ladder", src: "./Assets/sprites/environment/ladder.png" },
 
             // Level Backgrounds
             { id: "level1", src: "./Assets/sprites/environment/level1.png" },

@@ -24,15 +24,22 @@ var levels;
             this.SetLevelSize(1920, 1080);
             this.SetLevelBoundarySize(1);
             this._player = new objects.Player();
+            // Trap
             for (var i = 0; i < this._numberOfObstacles; i++) {
                 var enemy = new objects.Obstacle();
                 this.AddGameObject(enemy);
             }
+            // Platform
             this.AddGameObject(new objects.Platform(0, 78, managers.GameManager.CurrentLevel.LevelWidth - 1, 23));
             this.AddGameObject(new objects.Platform(0, 336, 1770, 23));
             this.AddGameObject(new objects.Platform(0, 540, managers.GameManager.CurrentLevel.LevelWidth - 1, 23));
             this.AddGameObject(new objects.Platform(0, 767, 880, 23));
-            this.AddGameObject(new objects.Platform(1020, 765, 900, 23));
+            this.AddGameObject(new objects.Platform(1020, 767, 900, 23));
+            // Ladder
+            this.AddGameObject(new objects.Ladder(54, 108, 64, 224));
+            this.AddGameObject(new objects.Ladder(90, 569, 64, 196));
+            this.AddGameObject(new objects.Ladder(1700, 363, 64, 178));
+            // Player
             this.AddGameObject(this._player);
         };
         Level1.prototype.OnSceneEnter = function () {

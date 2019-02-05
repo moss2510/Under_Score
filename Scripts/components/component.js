@@ -189,15 +189,43 @@ var components;
         __extends(Collider, _super);
         function Collider(x, y, width, height) {
             var _this = _super.call(this) || this;
-            _this._x = x;
-            _this._y = y;
+            _this._enableCollisionCheck = false;
+            _this.x = x;
+            _this.y = y;
             _this._width = width;
             _this._height = height;
-            _this._border = new createjs.Shape();
-            _this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(_this._x + 1, _this._y + 1, _this._width + 1, _this._height + 1).endStroke();
-            managers.GameManager.CurrentLevel.GameLayer.addChild(_this._border);
             return _this;
         }
+        Object.defineProperty(Collider.prototype, "Width", {
+            get: function () {
+                return this._width;
+            },
+            set: function (width) {
+                this._width = width;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Collider.prototype, "Height", {
+            get: function () {
+                return this._height;
+            },
+            set: function (height) {
+                this._height = height;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Collider.prototype, "EnableCollisionCheck", {
+            get: function () {
+                return this._enableCollisionCheck;
+            },
+            set: function (enable) {
+                this._enableCollisionCheck = enable;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Collider.prototype, "Border", {
             get: function () {
                 return this._border;
@@ -207,10 +235,15 @@ var components;
         });
         Collider.prototype.SetOwner = function (owner) {
             _super.prototype.SetOwner.call(this, owner);
+            this._border = new createjs.Shape();
+            this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(this.Owner.x, this.Owner.y, this.Owner.Width, this.Owner.Height).endStroke();
+            this.Owner.addChild(this._border);
+            managers.GameManager.CurrentLevel.GameLayer.addChild(this._border);
         };
         Collider.prototype.Update = function () {
-            // this._border.x = this.Owner.x;
-            // this._border.y = this.Owner.y;
+            this.x = this.Owner.x;
+            this.y = this.Owner.y;
+            this._border.x = this.x;
         };
         return Collider;
     }(components.Component));

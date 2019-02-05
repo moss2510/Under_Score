@@ -22,6 +22,7 @@ var objects;
             _this._height = height;
             _this._animationData = animationData;
             _this.Sprite = new createjs.Sprite(new createjs.SpriteSheet(_this._animationData));
+            _this.collider = new components.Collider(_this.x, _this.y, _this.Width, _this.Height);
             _this.Init();
             _this._afterInit();
             return _this;
@@ -78,6 +79,13 @@ var objects;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(GameObject.prototype, "Collider", {
+            get: function () {
+                return this.collider;
+            },
+            enumerable: true,
+            configurable: true
+        });
         // Direction 1 for RIGHT, -1 for LEFT
         GameObject.prototype.FlipSprite = function (direction) {
             this._sprite.scaleX = direction;
@@ -104,7 +112,7 @@ var objects;
         };
         GameObject.prototype.Update = function () {
             this.UpdateTransform();
-            this._updateComponents();
+            this.updateComponents();
             this.CheckBoundary();
         };
         GameObject.prototype.AddComponent = function (component) {
@@ -116,7 +124,7 @@ var objects;
                 this._currentLevel.AddGameObject(gameObject);
             }
         };
-        GameObject.prototype._updateComponents = function () {
+        GameObject.prototype.updateComponents = function () {
             for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
                 var component = _a[_i];
                 if (component.Owner == this) {

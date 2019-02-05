@@ -26,7 +26,8 @@ var objects;
                     runLeft: [16, 18, "runLeft", 0.5],
                     runRight: [19, 21, "runRight", 0.5],
                     jumpLeft: [1, 6, "jumpLeft"],
-                    jumpRight: [8, 13, "jumpRight"]
+                    jumpRight: [8, 13, "jumpRight"],
+                    clamping: [22, 23]
                 }
             }) || this;
             _this._movementSpeed = 5;
@@ -48,8 +49,9 @@ var objects;
             _this._shield.RegenerateRate = 0.1;
             _this.AddComponent(_this._shield);
             // Add Collider
-            _this._collider = new components.Collider(_this.x, _this.y, _this.Width, _this.Height);
-            _this.AddComponent(_this._collider);
+            _this.collider = new components.Collider(_this.x, _this.y, 32, 32);
+            _this.collider.EnableCollisionCheck = true;
+            _this.AddComponent(_this.collider);
             managers.GameManager.CameraManager.Follow(_this);
             _this._healthBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 24, 150, 20, _this._hp.Value, "black", "red", 2, "#D3D3D3");
             _this._healthBar.Value = 100;
@@ -70,13 +72,9 @@ var objects;
                 this._hp.Reduce(10);
                 this._healthBar.Value = this._hp.Value;
             }
-            var collision = this.checkPlatformCollision();
-            if (utils.Util.NotNullOrUndefined(collision)) {
-                this._rb2d.GravityScale = 0;
-            }
-            else {
-                this._rb2d.GravityScale = 9.8;
-            }
+            this.checkCollision();
+            //this.x = managers.GameManager.SceneManager.CurrentStage.mouseX;
+            //this.y = managers.GameManager.SceneManager.CurrentStage.mouseY;
         };
         Player.prototype.checkMovementInput = function () {
             if (managers.InputManager.KeyDown(config.Key.LEFT)) {
@@ -136,24 +134,51 @@ var objects;
             createjs.Tween.get(this).to({ y: this.y + this._jumpForce }, 500).call(function () { return _this._isJumping = false; });
         };
         Player.prototype.OnCollisionEnter = function (other) {
-            if (other.name == "test") {
+            if (other.name === "platform") {
+                if (this.Collider.y < other.Collider.y) {
+                    if (!this._isClamping) {
+                        this.y = other.y - this.regY;
+                    }
+                }
+            }
+            else if (other.name === "ladder") {
+                if (managers.InputManager.KeyDown(config.Key.UP)) {
+                    console.log("clamping");
+                    this._lastLadder = other;
+                    this.y -= this._movementSpeed;
+                    this._rb2d.GravityScale = 0;
+                    this._isClamping = true;
+                    this.Sprite.gotoAndPlay("clamping");
+                }
             }
         };
-        Player.prototype.checkPlatformCollision = function () {
+        Player.prototype.OnCollisionExit = function (other) {
+            if (other.name === "ladder" && utils.Util.NotNullOrUndefined(this._lastLadder) && other === this._lastLadder) {
+                // //console.log(this.collider.y + " " + other.Collider.y);
+                // console.log("Exit");
+                // if (this.y < other.y - this.Height) {
+                //     this._lastLadder = null;
+                //     this._rb2d.GravityScale = 1;
+                //     this._isClamping = false;
+                // }
+            }
+        };
+        Player.prototype.checkCollision = function () {
             for (var _i = 0, _a = managers.GameManager.CurrentLevel.GameObjects; _i < _a.length; _i++) {
                 var go = _a[_i];
-                if (go.name == this.name) {
+                if (go.name == this.name || !go.Collider.EnableCollisionCheck) {
                     continue;
                 }
-                if (this.x < go.x + go.Width &&
-                    this.x + this.Width > go.x &&
-                    this.y < go.y + go.Height &&
-                    this.y + this.Height > go.y) {
-                    console.log("hit");
-                    return go;
+                if (this.Collider.x < go.Collider.x + go.Collider.Width &&
+                    this.Collider.x + this.Collider.Width > go.Collider.x &&
+                    this.Collider.y < go.Collider.y + go.Collider.Height &&
+                    this.Collider.y + this.Collider.Height > go.Collider.y) {
+                    this.OnCollisionEnter(go);
+                }
+                else {
+                    this.OnCollisionExit(go);
                 }
             }
-            return null;
         };
         return Player;
     }(objects.GameObject));

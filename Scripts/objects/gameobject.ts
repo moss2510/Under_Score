@@ -20,6 +20,9 @@ module objects {
         // Animation Data
         private _animationData;
 
+        // Collider
+        protected collider: components.Collider;
+
         get PivotX(): number {
             return this._pivotX;
         }
@@ -56,6 +59,10 @@ module objects {
             this.addChild(this._sprite);
         }
 
+        get Collider(): components.Collider {
+            return this.collider;
+        }
+
         // Direction 1 for RIGHT, -1 for LEFT
         public FlipSprite(direction: number) {
             this._sprite.scaleX = direction;
@@ -74,6 +81,7 @@ module objects {
             this._height = height;
             this._animationData = animationData;
             this.Sprite = new createjs.Sprite(new createjs.SpriteSheet(this._animationData));
+            this.collider = new components.Collider(this.x, this.y, this.Width, this.Height);
             this.Init();
             this._afterInit();
         }
@@ -95,7 +103,7 @@ module objects {
 
         public Update(): void {
             this.UpdateTransform();
-            this._updateComponents();
+            this.updateComponents();
             this.CheckBoundary();
         }
 
@@ -110,7 +118,7 @@ module objects {
             }
         }
 
-        private _updateComponents(): void {
+        private updateComponents(): void {
             for (let component of this._components) {
                 if (component.Owner == this) {
                     component.Update();

@@ -13,7 +13,12 @@ module objects {
                 frames: { width: this.Width, height: this.Height }
             }));
             this.name = "platform";
-            this.AddComponent(new components.Collider(this.x, this.y - this.regY, this.Width, this.Height));
+            this.collider.x = this.x;
+            this.collider.y = this.collider.y;
+            this.collider.Width = this.Width;
+            this.collider.Height = this.Height;
+            this.collider.EnableCollisionCheck = true;
+            this.AddComponent(this.collider);
         }
 
         public Init(): void {

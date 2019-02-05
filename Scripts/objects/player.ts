@@ -11,7 +11,6 @@ module objects {
         private _rb2d: components.Rigidbody2D;
         private _hp: components.HealthComponent;
         private _shield: components.HealthComponent;
-        private _collider: components.Collider;
 
         // GUI Controls
         private _healthBar: controls.ProgressBar;
@@ -20,7 +19,9 @@ module objects {
         private _isPlayingAnimation: boolean;
         private _movingDirection: number;
 
-        private _isMovingRight: boolean;
+        private _isClamping: boolean;
+
+        private _lastLadder: objects.Ladder;
 
         constructor() {
             super(32, 32, {
@@ -33,7 +34,8 @@ module objects {
                     runLeft: [16, 18, "runLeft", 0.5], // Frames, next, speed
                     runRight: [19, 21, "runRight", 0.5],
                     jumpLeft: [1, 6, "jumpLeft"],
-                    jumpRight: [8, 13, "jumpRight"]
+                    jumpRight: [8, 13, "jumpRight"],
+                    clamping: [22, 23]
                 }
             });
             this.name = "player";
@@ -51,8 +53,9 @@ module objects {
             this._shield.RegenerateRate = 0.1;
             this.AddComponent(this._shield);
             // Add Collider
-            this._collider = new components.Collider(this.x, this.y, this.Width, this.Height);
-            this.AddComponent(this._collider);
+            this.collider = new components.Collider(this.x, this.y, 32, 32);
+            this.collider.EnableCollisionCheck = true;
+            this.AddComponent(this.collider);
 
             managers.GameManager.CameraManager.Follow(this);
             this._healthBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 24, 150, 20, this._hp.Value, "black", "red", 2, "#D3D3D3");
@@ -78,13 +81,9 @@ module objects {
                 this._hp.Reduce(10);
                 this._healthBar.Value = this._hp.Value;
             }
-            let collision = this.checkPlatformCollision();
-            if(utils.Util.NotNullOrUndefined(collision)){
-                this._rb2d.GravityScale = 0;
-            }
-            else{
-                this._rb2d.GravityScale = 9.8;
-            }
+            this.checkCollision();
+            //this.x = managers.GameManager.SceneManager.CurrentStage.mouseX;
+            //this.y = managers.GameManager.SceneManager.CurrentStage.mouseY;
         }
 
         private checkMovementInput() {
@@ -151,25 +150,52 @@ module objects {
         }
 
         public OnCollisionEnter(other: objects.GameObject) {
-            if (other.name == "test") {
-
+            if (other.name === "platform") {
+                if (this.Collider.y < other.Collider.y) {
+                    if (!this._isClamping) {
+                        this.y = other.y - this.regY;
+                    }
+                }
+            }
+            else if (other.name === "ladder") {
+                if (managers.InputManager.KeyDown(config.Key.UP)) {
+                    console.log("clamping");
+                    this._lastLadder = other;
+                    this.y -= this._movementSpeed;
+                    this._rb2d.GravityScale = 0;
+                    this._isClamping = true;
+                    this.Sprite.gotoAndPlay("clamping");
+                }
             }
         }
 
-        private checkPlatformCollision(): objects.GameObject {
+        public OnCollisionExit(other: objects.GameObject) {
+            if (other.name === "ladder" && utils.Util.NotNullOrUndefined(this._lastLadder) && other === this._lastLadder) {
+                // //console.log(this.collider.y + " " + other.Collider.y);
+                // console.log("Exit");
+                // if (this.y < other.y - this.Height) {
+                //     this._lastLadder = null;
+                //     this._rb2d.GravityScale = 1;
+                //     this._isClamping = false;
+                // }
+            }
+        }
+
+        private checkCollision(): void {
             for (let go of managers.GameManager.CurrentLevel.GameObjects) {
-                if(go.name == this.name){
+                if (go.name == this.name || !go.Collider.EnableCollisionCheck) {
                     continue;
                 }
-                if (this.x < go.x + go.Width &&
-                    this.x + this.Width > go.x &&
-                    this.y < go.y + go.Height &&
-                    this.y + this.Height > go.y) {
-                        console.log("hit");
-                    return go;
+                if (this.Collider.x < go.Collider.x + go.Collider.Width &&
+                    this.Collider.x + this.Collider.Width > go.Collider.x &&
+                    this.Collider.y < go.Collider.y + go.Collider.Height &&
+                    this.Collider.y + this.Collider.Height > go.Collider.y) {
+                    this.OnCollisionEnter(go);
+                }
+                else {
+                    this.OnCollisionExit(go);
                 }
             }
-            return null;
         }
     }
 }
