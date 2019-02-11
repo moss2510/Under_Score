@@ -56,6 +56,7 @@ module scenes {
         }
 
         public AddGameObject(object: objects.GameObject) {
+            console.log("Added " + object.name);
             object.CurrentLevel = this;
             this._gameObjects.push(object);
             this._gameLayer.addChild(object);

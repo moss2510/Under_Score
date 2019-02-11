@@ -14,18 +14,9 @@ var __extends = (this && this.__extends) || (function () {
 var components;
 (function (components) {
     var Component = /** @class */ (function () {
-        function Component() {
+        function Component(owner) {
+            this.owner = owner;
         }
-        Object.defineProperty(Component.prototype, "Owner", {
-            get: function () {
-                return this._owner;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Component.prototype.SetOwner = function (owner) {
-            this._owner = owner;
-        };
         return Component;
     }());
     components.Component = Component;
@@ -51,42 +42,12 @@ var components;
         return Transform;
     }());
     components.Transform = Transform;
-    var Point = /** @class */ (function () {
-        function Point(x, y) {
-            this.Set(x, y);
-        }
-        Point.prototype.Set = function (x, y) {
-            this._x = x;
-            this._y = y;
-        };
-        Object.defineProperty(Point.prototype, "X", {
-            get: function () {
-                return this._x;
-            },
-            set: function (x) {
-                this._x = x;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        Object.defineProperty(Point.prototype, "Y", {
-            get: function () {
-                return this._y;
-            },
-            set: function (y) {
-                this._y = y;
-            },
-            enumerable: true,
-            configurable: true
-        });
-        return Point;
-    }());
-    components.Point = Point;
     var Rigidbody2D = /** @class */ (function (_super) {
         __extends(Rigidbody2D, _super);
-        function Rigidbody2D() {
-            var _this = _super.call(this) || this;
-            _this._velocity = new components.Point(0, 0);
+        function Rigidbody2D(owner) {
+            var _this = _super.call(this, owner) || this;
+            _this.name = "Rigidbody2D";
+            _this._velocity = new math.Vector2(0, 0);
             _this._gravityScale = 1;
             return _this;
         }
@@ -111,20 +72,21 @@ var components;
             configurable: true
         });
         Rigidbody2D.prototype.Update = function () {
-            this.Owner.x += this._velocity.X;
-            this.Owner.y -= this._velocity.Y;
-            this.Owner.y += this._gravityScale * physics.Config.GRAVITY;
+            this.owner.x += this._velocity.x;
+            this.owner.y -= this._velocity.y;
+            this.owner.y += this._gravityScale * physics.Config.GRAVITY;
         };
         return Rigidbody2D;
     }(components.Component));
     components.Rigidbody2D = Rigidbody2D;
     var HealthComponent = /** @class */ (function (_super) {
         __extends(HealthComponent, _super);
-        function HealthComponent(maxHP, progressBar) {
-            var _this = _super.call(this) || this;
+        function HealthComponent(owner, maxHP, progressBar) {
+            var _this = _super.call(this, owner) || this;
             _this._value = 0;
             _this._maxValue = 0;
             _this._regenerateRate = 0;
+            _this.name = "Health Component";
             _this._maxValue = maxHP;
             _this._value = _this._maxValue;
             _this._progressBar = progressBar;
@@ -187,13 +149,23 @@ var components;
     components.HealthComponent = HealthComponent;
     var Collider = /** @class */ (function (_super) {
         __extends(Collider, _super);
-        function Collider(x, y, width, height) {
-            var _this = _super.call(this) || this;
-            _this._enableCollisionCheck = false;
-            _this.x = x;
-            _this.y = y;
+        function Collider(owner, offsetX, offsetY, width, height) {
+            var _this = _super.call(this, owner) || this;
+            _this._enableCollisionCheck = true;
+            _this.name = "Collider";
+            _this._offsetX = offsetX;
+            _this._offsetY = offsetY;
             _this._width = width;
             _this._height = height;
+            _this._border = new createjs.Shape();
+            _this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(0, 0, width, height).endStroke();
+            _this.owner.addChild(_this._border);
+            console.log(_this.owner.x + " - " + _this.owner.y);
+            console.log(_this.Width + " - " + _this.Height);
+            console.log(_this.Left);
+            console.log(_this.Right);
+            console.log(_this.Top);
+            console.log(_this.Bottom);
             return _this;
         }
         Object.defineProperty(Collider.prototype, "Width", {
@@ -226,6 +198,34 @@ var components;
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(Collider.prototype, "Top", {
+            get: function () {
+                return this.owner.y - this._offsetY - this.Height / 2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Collider.prototype, "Bottom", {
+            get: function () {
+                return this.owner.y + this._offsetY + this.Height / 2;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Collider.prototype, "Left", {
+            get: function () {
+                return this.owner.x - this._offsetX;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Collider.prototype, "Right", {
+            get: function () {
+                return this.owner.x + this._offsetY + this.Width;
+            },
+            enumerable: true,
+            configurable: true
+        });
         Object.defineProperty(Collider.prototype, "Border", {
             get: function () {
                 return this._border;
@@ -233,17 +233,7 @@ var components;
             enumerable: true,
             configurable: true
         });
-        Collider.prototype.SetOwner = function (owner) {
-            _super.prototype.SetOwner.call(this, owner);
-            this._border = new createjs.Shape();
-            this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(this.Owner.x, this.Owner.y, this.Owner.Width, this.Owner.Height).endStroke();
-            this.Owner.addChild(this._border);
-            managers.GameManager.CurrentLevel.GameLayer.addChild(this._border);
-        };
         Collider.prototype.Update = function () {
-            this.x = this.Owner.x;
-            this.y = this.Owner.y;
-            this._border.x = this.x;
         };
         return Collider;
     }(components.Component));

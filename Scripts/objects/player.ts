@@ -42,19 +42,18 @@ module objects {
             this._movingDirection = 1;
             this.y = 730;
             // Add Rigidbody to allow gravity
-            this._rb2d = new components.Rigidbody2D();
+            this._rb2d = new components.Rigidbody2D(this);
             this.AddComponent(this._rb2d);
             // Add Health
-            this._hp = new components.HealthComponent(100);
+            this._hp = new components.HealthComponent(this, 100);
             this._hp.RegenerateRate = 0.1;
             this.AddComponent(this._hp);
             // Add Shield
-            this._shield = new components.HealthComponent(80);
+            this._shield = new components.HealthComponent(this, 80);
             this._shield.RegenerateRate = 0.1;
             this.AddComponent(this._shield);
             // Add Collider
-            this.collider = new components.Collider(this.x, this.y, 32, 32);
-            this.collider.EnableCollisionCheck = true;
+            this.collider = new components.Collider(this, 0, 0, 32, 32);
             this.AddComponent(this.collider);
 
             managers.GameManager.CameraManager.Follow(this);
@@ -69,7 +68,7 @@ module objects {
         }
 
         public Init(): void {
-            this.SetPivotPoint(this.Width / 2, this.Height / 2);
+            this.SetPivotPoint(this.Width / 2, this.Height);
         }
 
         public UpdateTransform(): void {
@@ -82,8 +81,6 @@ module objects {
                 this._healthBar.Value = this._hp.Value;
             }
             this.checkCollision();
-            //this.x = managers.GameManager.SceneManager.CurrentStage.mouseX;
-            //this.y = managers.GameManager.SceneManager.CurrentStage.mouseY;
         }
 
         private checkMovementInput() {
@@ -115,6 +112,7 @@ module objects {
                 if (!this._isPlayingAnimation) {
                     this.playAnimation("jump");
                 }
+                //createjs.Sound.play("sfxHit");
             }
             if (managers.InputManager.KeyDown(config.Key.F)) {
                 this.y -= this._jumpForce;
@@ -186,13 +184,11 @@ module objects {
                 if (go.name == this.name || !go.Collider.EnableCollisionCheck) {
                     continue;
                 }
-                if (this.Collider.x < go.Collider.x + go.Collider.Width &&
-                    this.Collider.x + this.Collider.Width > go.Collider.x &&
-                    this.Collider.y < go.Collider.y + go.Collider.Height &&
-                    this.Collider.y + this.Collider.Height > go.Collider.y) {
+                if(physics.Physics.CollisionAABB(this, go)){
+                    console.log("Colliding");
                     this.OnCollisionEnter(go);
                 }
-                else {
+                else{
                     this.OnCollisionExit(go);
                 }
             }

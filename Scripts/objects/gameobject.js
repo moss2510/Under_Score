@@ -18,11 +18,12 @@ var objects;
         function GameObject(width, height, animationData) {
             var _this = _super.call(this) || this;
             _this._components = new Array();
-            _this._width = width;
-            _this._height = height;
+            _this.x = 0;
+            _this.y = 0;
+            _this.width = width;
+            _this.height = height;
             _this._animationData = animationData;
             _this.Sprite = new createjs.Sprite(new createjs.SpriteSheet(_this._animationData));
-            _this.collider = new components.Collider(_this.x, _this.y, _this.Width, _this.Height);
             _this.Init();
             _this._afterInit();
             return _this;
@@ -43,14 +44,14 @@ var objects;
         });
         Object.defineProperty(GameObject.prototype, "Width", {
             get: function () {
-                return this._width;
+                return this.width;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(GameObject.prototype, "Height", {
             get: function () {
-                return this._height;
+                return this.height;
             },
             enumerable: true,
             configurable: true
@@ -67,14 +68,12 @@ var objects;
         });
         Object.defineProperty(GameObject.prototype, "Sprite", {
             get: function () {
-                return this._sprite;
+                return this.sprite;
             },
             set: function (sprite) {
-                this._sprite = sprite;
-                this._sprite.regX = this._width / 2; // For Filp Sprite
-                this._sprite.regY = this._height / 2;
+                this.sprite = sprite;
                 this.removeAllChildren();
-                this.addChild(this._sprite);
+                this.addChild(this.sprite);
             },
             enumerable: true,
             configurable: true
@@ -88,7 +87,7 @@ var objects;
         });
         // Direction 1 for RIGHT, -1 for LEFT
         GameObject.prototype.FlipSprite = function (direction) {
-            this._sprite.scaleX = direction;
+            this.sprite.scaleX = direction;
         };
         GameObject.prototype.SetPivotPoint = function (x, y) {
             this._pivotX = x;
@@ -109,6 +108,9 @@ var objects;
             if (this.y < this.PivotY) {
                 this.y = this.PivotY;
             }
+            var positionPoint = new createjs.Shape();
+            positionPoint.graphics.setStrokeStyle(1).beginStroke("#FF0000").drawCircle(this.x, this.y, 1).endStroke();
+            this.addChild(positionPoint);
         };
         GameObject.prototype.Update = function () {
             this.UpdateTransform();
@@ -116,7 +118,7 @@ var objects;
             this.CheckBoundary();
         };
         GameObject.prototype.AddComponent = function (component) {
-            component.SetOwner(this);
+            console.log("Added " + component.name + " to " + this.name);
             this._components.push(component);
         };
         GameObject.prototype.Instanitate = function (gameObject) {
@@ -127,9 +129,7 @@ var objects;
         GameObject.prototype.updateComponents = function () {
             for (var _i = 0, _a = this._components; _i < _a.length; _i++) {
                 var component = _a[_i];
-                if (component.Owner == this) {
-                    component.Update();
-                }
+                component.Update();
             }
         };
         // Methods to Override

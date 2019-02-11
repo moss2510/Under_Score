@@ -19,19 +19,13 @@ var objects;
             var _this = _super.call(this, width, height) || this;
             _this.x = x;
             _this.y = y;
-            _this.regX = _this.Width / 2;
-            _this.regY = _this.Height / 2;
             _this.Sprite = new createjs.Sprite(new createjs.SpriteSheet({
                 framerate: 1,
                 images: [managers.GameManager.AssetManager.getResult("sprite_platform")],
                 frames: { width: _this.Width, height: _this.Height }
             }));
             _this.name = "platform";
-            _this.collider.x = _this.x;
-            _this.collider.y = _this.collider.y;
-            _this.collider.Width = _this.Width;
-            _this.collider.Height = _this.Height;
-            _this.collider.EnableCollisionCheck = true;
+            _this.collider = new components.Collider(_this, 0, 0, width, height);
             _this.AddComponent(_this.collider);
             return _this;
         }

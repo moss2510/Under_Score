@@ -3,10 +3,10 @@ module objects {
 
         private _transform: components.Transform;
 
-        protected myX: number;
+        public position: math.Vector2;
 
-        private _width: number;
-        private _height: number;
+        protected width: number;
+        protected height: number;
 
         private _pivotX: number;
         private _pivotY: number;
@@ -15,7 +15,7 @@ module objects {
 
         private _currentLevel: scenes.Play;
 
-        private _sprite: createjs.Sprite;
+        protected sprite: createjs.Sprite;
 
         // Animation Data
         private _animationData;
@@ -32,11 +32,11 @@ module objects {
         }
 
         get Width(): number {
-            return this._width;
+            return this.width;
         }
 
         get Height(): number {
-            return this._height;
+            return this.height;
         }
 
         get CurrentLevel(): scenes.Play {
@@ -44,7 +44,7 @@ module objects {
         }
 
         get Sprite(): createjs.Sprite {
-            return this._sprite;
+            return this.sprite;
         }
 
         set CurrentLevel(level: scenes.Play) {
@@ -52,11 +52,9 @@ module objects {
         }
 
         set Sprite(sprite: createjs.Sprite) {
-            this._sprite = sprite;
-            this._sprite.regX = this._width / 2; // For Filp Sprite
-            this._sprite.regY = this._height / 2;
+            this.sprite = sprite;
             this.removeAllChildren();
-            this.addChild(this._sprite);
+            this.addChild(this.sprite);
         }
 
         get Collider(): components.Collider {
@@ -65,7 +63,7 @@ module objects {
 
         // Direction 1 for RIGHT, -1 for LEFT
         public FlipSprite(direction: number) {
-            this._sprite.scaleX = direction;
+            this.sprite.scaleX = direction;
         }
 
         public SetPivotPoint(x: number, y: number) {
@@ -77,11 +75,12 @@ module objects {
 
         constructor(width: number, height: number, animationData?: object) {
             super();
-            this._width = width;
-            this._height = height;
+            this.x = 0;
+            this.y = 0;
+            this.width = width;
+            this.height = height;
             this._animationData = animationData;
             this.Sprite = new createjs.Sprite(new createjs.SpriteSheet(this._animationData));
-            this.collider = new components.Collider(this.x, this.y, this.Width, this.Height);
             this.Init();
             this._afterInit();
         }
@@ -99,6 +98,9 @@ module objects {
             if (this.y < this.PivotY) {
                 this.y = this.PivotY;
             }
+            let positionPoint = new createjs.Shape();
+            positionPoint.graphics.setStrokeStyle(1).beginStroke("#FF0000").drawCircle(this.x, this.y, 1).endStroke();
+            this.addChild(positionPoint);
         }
 
         public Update(): void {
@@ -108,7 +110,7 @@ module objects {
         }
 
         public AddComponent(component: components.Component) {
-            component.SetOwner(this);
+            console.log("Added " + component.name + " to " + this.name);
             this._components.push(component);
         }
 
@@ -120,9 +122,7 @@ module objects {
 
         private updateComponents(): void {
             for (let component of this._components) {
-                if (component.Owner == this) {
-                    component.Update();
-                }
+                component.Update();
             }
         }
 

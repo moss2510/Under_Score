@@ -3,16 +3,13 @@ module objects {
 
         constructor(x: number, y: number, width: number, height: number) {
             super(width, height);
-            this.x = x;
-            this.y = y;
             this.Sprite = new createjs.Sprite(new createjs.SpriteSheet({
                 framerate: 1,
                 images: [managers.GameManager.AssetManager.getResult("sprite_ladder")],
                 frames: { width: width, height: height }
             }));
             this.name = "ladder";
-            this.collider = new components.Collider(this.x, this.y, this.Width, this.Height);
-            this.collider.EnableCollisionCheck = true;
+            this.collider = new components.Collider(this, 0, 0, this.Width, this.Height);
             this.AddComponent(this.collider);
         }
 

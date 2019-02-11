@@ -38,19 +38,18 @@ var objects;
             _this._movingDirection = 1;
             _this.y = 730;
             // Add Rigidbody to allow gravity
-            _this._rb2d = new components.Rigidbody2D();
+            _this._rb2d = new components.Rigidbody2D(_this);
             _this.AddComponent(_this._rb2d);
             // Add Health
-            _this._hp = new components.HealthComponent(100);
+            _this._hp = new components.HealthComponent(_this, 100);
             _this._hp.RegenerateRate = 0.1;
             _this.AddComponent(_this._hp);
             // Add Shield
-            _this._shield = new components.HealthComponent(80);
+            _this._shield = new components.HealthComponent(_this, 80);
             _this._shield.RegenerateRate = 0.1;
             _this.AddComponent(_this._shield);
             // Add Collider
-            _this.collider = new components.Collider(_this.x, _this.y, 32, 32);
-            _this.collider.EnableCollisionCheck = true;
+            _this.collider = new components.Collider(_this, 0, 0, 32, 32);
             _this.AddComponent(_this.collider);
             managers.GameManager.CameraManager.Follow(_this);
             _this._healthBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 24, 150, 20, _this._hp.Value, "black", "red", 2, "#D3D3D3");
@@ -62,7 +61,7 @@ var objects;
             return _this;
         }
         Player.prototype.Init = function () {
-            this.SetPivotPoint(this.Width / 2, this.Height / 2);
+            this.SetPivotPoint(this.Width / 2, this.Height);
         };
         Player.prototype.UpdateTransform = function () {
             this.checkMovementInput();
@@ -73,8 +72,6 @@ var objects;
                 this._healthBar.Value = this._hp.Value;
             }
             this.checkCollision();
-            //this.x = managers.GameManager.SceneManager.CurrentStage.mouseX;
-            //this.y = managers.GameManager.SceneManager.CurrentStage.mouseY;
         };
         Player.prototype.checkMovementInput = function () {
             if (managers.InputManager.KeyDown(config.Key.LEFT)) {
@@ -103,6 +100,7 @@ var objects;
                 if (!this._isPlayingAnimation) {
                     this.playAnimation("jump");
                 }
+                //createjs.Sound.play("sfxHit");
             }
             if (managers.InputManager.KeyDown(config.Key.F)) {
                 this.y -= this._jumpForce;
@@ -169,10 +167,8 @@ var objects;
                 if (go.name == this.name || !go.Collider.EnableCollisionCheck) {
                     continue;
                 }
-                if (this.Collider.x < go.Collider.x + go.Collider.Width &&
-                    this.Collider.x + this.Collider.Width > go.Collider.x &&
-                    this.Collider.y < go.Collider.y + go.Collider.Height &&
-                    this.Collider.y + this.Collider.Height > go.Collider.y) {
+                if (physics.Physics.CollisionAABB(this, go)) {
+                    console.log("Colliding");
                     this.OnCollisionEnter(go);
                 }
                 else {

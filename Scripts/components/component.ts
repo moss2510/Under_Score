@@ -1,13 +1,10 @@
 module components {
     export abstract class Component {
-        private _owner: objects.GameObject;
+        public name: string;
+        protected owner: objects.GameObject;
 
-        get Owner(): objects.GameObject {
-            return this._owner;
-        }
-
-        public SetOwner(owner: objects.GameObject): void {
-            this._owner = owner;
+        constructor(owner: objects.GameObject) {
+            this.owner = owner;
         }
 
         public abstract Update(): void;
@@ -15,66 +12,39 @@ module components {
 
     export class Transform {
 
-        private _position: components.Point;
-        private _rotation: components.Point;
+        private _position: math.Vector2;
+        private _rotation: math.Vector2;
 
-        constructor(position?: components.Point, rotation?: components.Point) {
+        constructor(position?: math.Vector2, rotation?: math.Vector2) {
             this._position = position;
             this._rotation = rotation;
         }
 
-        get Position(): components.Point {
+        get Position(): math.Vector2 {
             return this._position;
         }
 
-        get Rotation(): components.Point {
+        get Rotation(): math.Vector2 {
             return this._rotation;
         }
     }
 
-    export class Point {
-        private _x: number;
-        private _y: number;
-
-        constructor(x: number, y: number) {
-            this.Set(x, y);
-        }
-
-        public Set(x: number, y: number) {
-            this._x = x;
-            this._y = y;
-        }
-
-        get X(): number {
-            return this._x;
-        }
-        set X(x: number) {
-            this._x = x;
-        }
-
-        get Y(): number {
-            return this._y;
-        }
-        set Y(y: number) {
-            this._y = y;
-        }
-    }
-
     export class Rigidbody2D extends components.Component {
-        private _velocity: components.Point;
+        private _velocity: math.Vector2;
         private _gravityScale: number;
 
-        constructor() {
-            super();
-            this._velocity = new components.Point(0, 0);
+        constructor(owner: objects.GameObject) {
+            super(owner);
+            this.name = "Rigidbody2D";
+            this._velocity = new math.Vector2(0, 0);
             this._gravityScale = 1;
         }
 
-        get Velocity(): components.Point {
+        get Velocity(): math.Vector2 {
             return this._velocity;
         }
 
-        set Velocity(velocity: components.Point) {
+        set Velocity(velocity: math.Vector2) {
             this._velocity = velocity;
         }
 
@@ -87,9 +57,9 @@ module components {
         }
 
         public Update(): void {
-            this.Owner.x += this._velocity.X;
-            this.Owner.y -= this._velocity.Y;
-            this.Owner.y += this._gravityScale * physics.Config.GRAVITY;
+            this.owner.x += this._velocity.x;
+            this.owner.y -= this._velocity.y;
+            this.owner.y += this._gravityScale * physics.Config.GRAVITY;
         }
     }
 
@@ -100,8 +70,9 @@ module components {
         private _regenerateRate: number = 0;
         private _progressBar: controls.ProgressBar;
 
-        constructor(maxHP: number, progressBar?: controls.ProgressBar) {
-            super();
+        constructor(owner: objects.GameObject, maxHP: number, progressBar?: controls.ProgressBar) {
+            super(owner);
+            this.name = "Health Component";
             this._maxValue = maxHP;
             this._value = this._maxValue;
             this._progressBar = progressBar;
@@ -155,10 +126,12 @@ module components {
 
         public x: number;
         public y: number;
+        private _offsetX: number;
+        private _offsetY: number;
         private _width: number;
         private _height: number;
 
-        private _enableCollisionCheck: boolean = false;
+        private _enableCollisionCheck: boolean = true;
 
         set Width(width: number) {
             this._width = width;
@@ -184,33 +157,49 @@ module components {
             return this._enableCollisionCheck;
         }
 
+        get Top(): number {
+            return this.owner.y - this._offsetY - this.Height / 2;
+        }
+
+        get Bottom(): number {
+            return this.owner.y + this._offsetY + this.Height / 2;
+        }
+
+        get Left(): number {
+            return this.owner.x - this._offsetX;
+        }
+
+        get Right(): number {
+            return this.owner.x + this._offsetY + this.Width;
+        }
+
         private _border: createjs.Shape;
 
         get Border(): createjs.Shape {
             return this._border;
         }
 
-        constructor(x: number, y: number, width: number, height: number) {
-            super();
-            this.x = x;
-            this.y = y;
+        constructor(owner: objects.GameObject, offsetX: number, offsetY: number, width: number, height: number) {
+            super(owner);
+            this.name = "Collider";
+            this._offsetX = offsetX;
+            this._offsetY = offsetY;
             this._width = width;
             this._height = height;
-        }
-
-        public SetOwner(owner: objects.GameObject): void {
-            super.SetOwner(owner);
             this._border = new createjs.Shape();
-            this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(this.Owner.x, this.Owner.y, this.Owner.Width, this.Owner.Height).endStroke();
-            this.Owner.addChild(this._border);
-            managers.GameManager.CurrentLevel.GameLayer.addChild(this._border);
+            this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(0, 0, width, height).endStroke();
+            this.owner.addChild(this._border);
+
+            console.log(this.owner.x + " - " + this.owner.y);
+            console.log(this.Width + " - " + this.Height);
+            console.log(this.Left);
+            console.log(this.Right);
+            console.log(this.Top);
+            console.log(this.Bottom);
         }
 
 
         public Update(): void {
-            this.x = this.Owner.x;
-            this.y = this.Owner.y;
-            this._border.x = this.x;
         }
     }
 }

@@ -3,6 +3,7 @@ var managers;
     var GameManager = /** @class */ (function () {
         function GameManager() {
         }
+        GameManager.DebugMode = true;
         GameManager.AssetManifest = [
             // UI - Main Menu
             { id: "btnStart", src: "./Assets/sprites/menu/gui/btnStart.png" },
@@ -17,7 +18,7 @@ var managers;
             // Level Backgrounds
             { id: "level1", src: "./Assets/sprites/environment/level1.png" },
             { id: "level2", src: "./Assets/sprites/environment/level2.png" },
-            { id: "level3", src: "./Assets/sprites/environment/level3.png" }
+            { id: "level3", src: "./Assets/sprites/environment/level3.png" },
         ];
         return GameManager;
     }());

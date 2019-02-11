@@ -1,5 +1,6 @@
 module managers {
     export class GameManager {
+        public static DebugMode: boolean = true;
         public static AssetManager: createjs.LoadQueue; // handles preload
         public static SceneManager: managers.SceneManager; // handles scenes
         public static CameraManager: managers.CameraManager; // handles camera movement
@@ -21,7 +22,13 @@ module managers {
             // Level Backgrounds
             { id: "level1", src: "./Assets/sprites/environment/level1.png" },
             { id: "level2", src: "./Assets/sprites/environment/level2.png" },
-            { id: "level3", src: "./Assets/sprites/environment/level3.png" }
+            { id: "level3", src: "./Assets/sprites/environment/level3.png" },
+
+            // Audio
+            // Background Music
+            //  { id: "bgmFloor1", src: "./Assets/audio/bgmFloor1.wav" },
+            // SFX
+            //   { id: "sfxHit", src: "./Assets/audio/sfxHit.wav"}
         ];
     }
 }
