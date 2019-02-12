@@ -18,7 +18,7 @@ var objects;
         Action[Action["STANDING"] = 0] = "STANDING";
         Action[Action["WALKING"] = 1] = "WALKING";
         Action[Action["JUMPING"] = 2] = "JUMPING";
-        Action[Action["CLAMPING"] = 3] = "CLAMPING";
+        Action[Action["CLIMBING"] = 3] = "CLIMBING";
         Action[Action["INTERACTING"] = 4] = "INTERACTING";
     })(Action = objects.Action || (objects.Action = {}));
     var Direction;

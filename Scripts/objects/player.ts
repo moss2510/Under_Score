@@ -33,7 +33,7 @@ module objects {
                     runRight: [19, 21, "runRight", 0.5],
                     jumpLeft: [1, 6, "jumpLeft"],
                     jumpRight: [8, 13, "jumpRight"],
-                    clamping: [22, 23]
+                    climbing: [22, 23]
                 }
             });
             this.name = "player";
@@ -97,9 +97,9 @@ module objects {
                         this.playAndStopAnimation("jump");
                     }
                     break;
-                case Action.CLAMPING:
+                case Action.CLIMBING:
                     if (!this._isPlayingAnimation) {
-                        this.playAnimation("clamping");
+                        this.playAnimation("climbing");
                     }
                     break;
                 case Action.INTERACTING:
@@ -109,7 +109,7 @@ module objects {
 
         private checkMovementInput() {
             // If not clamping then player can move left or right
-            if (this._action != Action.CLAMPING) {
+            if (this._action != Action.CLIMBING) {
                 if (managers.InputManager.KeyDown(config.Key.LEFT)) {
                     this._action = Action.WALKING;
                     this._direction = Direction.LEFT;
@@ -174,7 +174,7 @@ module objects {
 
         public OnCollisionEnter(other: objects.GameObject) {
 
-            if (this._action != Action.CLAMPING) {
+            if (this._action != Action.CLIMBING) {
                 if (other.name === "platform") {
                     this.y = other.Collider.Top + this.regY / 2;
                 }
@@ -190,13 +190,13 @@ module objects {
                     this._lastLadder = other;
                     this.y -= this._movementSpeed;
                     this._rb2d.GravityScale = 0;
-                    this._action = Action.CLAMPING;
-                    this.Sprite.gotoAndPlay("clamping");
+                    this._action = Action.CLIMBING;
+                    this.Sprite.gotoAndPlay("climbing");
                 }
                 else if (managers.InputManager.KeyDown(config.Key.DOWN)) {
                     this._lastPlatform = other;
-                    this._action = Action.CLAMPING;
-                    this.Sprite.gotoAndPlay("clamping");
+                    this._action = Action.CLIMBING;
+                    this.Sprite.gotoAndPlay("climbing");
                     this.y += this._movementSpeed;
                 }
             }

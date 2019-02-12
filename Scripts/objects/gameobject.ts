@@ -1,6 +1,6 @@
 module objects {
     export enum Action{
-        STANDING, WALKING, JUMPING, CLAMPING, INTERACTING
+        STANDING, WALKING, JUMPING, CLIMBING, INTERACTING
     }
     export enum Direction{
         LEFT = -1, RIGHT = 1
