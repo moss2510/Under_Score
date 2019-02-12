@@ -16,6 +16,8 @@ module scenes {
         private _guiLayer: createjs.Container;
         private _gameLayer: createjs.Container;
 
+        protected player: objects.Player;
+
         get GUILayer(): createjs.Container {
             return this._guiLayer;
         }
@@ -38,17 +40,41 @@ module scenes {
 
         constructor(name: string, bg: createjs.Bitmap) {
             super(config.Scene.Play);
+            managers.GameManager.CurrentLevel = this;
+
             this._name = name;
             this._gameLayer = new createjs.Container();
             this._gameLayer.addChild(bg);
             this._guiLayer = new createjs.Container();
             this.addChild(this._gameLayer);
             this.addChild(this._guiLayer);
+
+            this.player = new objects.Player();
+            this.AddGameObject(this.player);
         }
 
         public Update(): void {
             for (let gameObject of this._gameObjects) {
                 gameObject.Update();
+            }
+
+            for (let go of this._gameObjects) {
+                // Skip checking player to player and if collision is disabled
+                if (go.name == "player" || !go.Collider.EnableCollisionCheck) {
+                    continue;
+                }
+                if (physics.Physics.CollisionAABB(this.player, go)) {
+                    //this.player.Collider.ShowCollision(true);
+                    //go.Collider.ShowCollision(true);
+                    this.player.OnCollisionEnter(go);
+                }
+                else {
+                    //this.player.Collider.ShowCollision(false);
+                    //go.Collider.ShowCollision(false);
+                }
+                // else{
+                //     this._player.OnCollisionExit(go);
+                // }
             }
             if (this._levelCompleted) {
                 this.OnLevelCompleted();
@@ -57,6 +83,7 @@ module scenes {
 
         public AddGameObject(object: objects.GameObject) {
             console.log("Added " + object.name);
+            object.Collider.AddAxis();
             object.CurrentLevel = this;
             this._gameObjects.push(object);
             this._gameLayer.addChild(object);

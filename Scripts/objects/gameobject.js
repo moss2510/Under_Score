@@ -13,18 +13,37 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var objects;
 (function (objects) {
+    var Action;
+    (function (Action) {
+        Action[Action["STANDING"] = 0] = "STANDING";
+        Action[Action["WALKING"] = 1] = "WALKING";
+        Action[Action["JUMPING"] = 2] = "JUMPING";
+        Action[Action["CLAMPING"] = 3] = "CLAMPING";
+        Action[Action["INTERACTING"] = 4] = "INTERACTING";
+    })(Action = objects.Action || (objects.Action = {}));
+    var Direction;
+    (function (Direction) {
+        Direction[Direction["LEFT"] = -1] = "LEFT";
+        Direction[Direction["RIGHT"] = 1] = "RIGHT";
+    })(Direction = objects.Direction || (objects.Direction = {}));
     var GameObject = /** @class */ (function (_super) {
         __extends(GameObject, _super);
-        function GameObject(width, height, animationData) {
+        function GameObject(x, y, width, height, animationData) {
+            if (x === void 0) { x = 0; }
+            if (y === void 0) { y = 0; }
             var _this = _super.call(this) || this;
+            _this._width = 0;
+            _this._height = 0;
+            _this._pivotX = 0;
+            _this._pivotY = 0;
             _this._components = new Array();
-            _this.x = 0;
-            _this.y = 0;
-            _this.width = width;
-            _this.height = height;
+            _this.x = x;
+            _this.y = y;
+            _this._width = width;
+            _this._height = height;
+            _this.Init();
             _this._animationData = animationData;
             _this.Sprite = new createjs.Sprite(new createjs.SpriteSheet(_this._animationData));
-            _this.Init();
             _this._afterInit();
             return _this;
         }
@@ -44,14 +63,14 @@ var objects;
         });
         Object.defineProperty(GameObject.prototype, "Width", {
             get: function () {
-                return this.width;
+                return this._width;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(GameObject.prototype, "Height", {
             get: function () {
-                return this.height;
+                return this._height;
             },
             enumerable: true,
             configurable: true
@@ -72,6 +91,8 @@ var objects;
             },
             set: function (sprite) {
                 this.sprite = sprite;
+                this.sprite.regX = this.PivotX;
+                this.sprite.regY = this.PivotY;
                 this.removeAllChildren();
                 this.addChild(this.sprite);
             },
@@ -92,8 +113,6 @@ var objects;
         GameObject.prototype.SetPivotPoint = function (x, y) {
             this._pivotX = x;
             this._pivotY = y;
-            this.regX = x;
-            this.regY = y;
         };
         GameObject.prototype._afterInit = function () {
             if (this.x > managers.GameManager.SceneManager.ScreenWidth - this.PivotX) {
@@ -108,14 +127,20 @@ var objects;
             if (this.y < this.PivotY) {
                 this.y = this.PivotY;
             }
-            var positionPoint = new createjs.Shape();
-            positionPoint.graphics.setStrokeStyle(1).beginStroke("#FF0000").drawCircle(this.x, this.y, 1).endStroke();
-            this.addChild(positionPoint);
+            // Add PivotPoint
+            var pivotPoint = new createjs.Shape();
+            pivotPoint.graphics.setStrokeStyle(1).beginStroke("#0000FF").drawCircle(0, 0, 1).endStroke();
+            this.addChild(pivotPoint);
+            // Add PivotPoint
+            var position = new createjs.Shape();
+            position.graphics.setStrokeStyle(1).beginStroke("#FFFF00").drawCircle(0, 0, 3).endStroke();
+            this.addChild(position);
         };
         GameObject.prototype.Update = function () {
             this.UpdateTransform();
             this.updateComponents();
             this.CheckBoundary();
+            this.OnAction();
         };
         GameObject.prototype.AddComponent = function (component) {
             console.log("Added " + component.name + " to " + this.name);

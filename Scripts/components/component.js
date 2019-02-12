@@ -158,14 +158,10 @@ var components;
             _this._width = width;
             _this._height = height;
             _this._border = new createjs.Shape();
-            _this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(0, 0, width, height).endStroke();
+            _this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(-_this._offsetX, -_this._offsetY, width, height).endStroke();
             _this.owner.addChild(_this._border);
-            console.log(_this.owner.x + " - " + _this.owner.y);
-            console.log(_this.Width + " - " + _this.Height);
-            console.log(_this.Left);
-            console.log(_this.Right);
-            console.log(_this.Top);
-            console.log(_this.Bottom);
+            console.log("Collider Info:");
+            console.log(_this);
             return _this;
         }
         Object.defineProperty(Collider.prototype, "Width", {
@@ -200,14 +196,14 @@ var components;
         });
         Object.defineProperty(Collider.prototype, "Top", {
             get: function () {
-                return this.owner.y - this._offsetY - this.Height / 2;
+                return this.owner.y - this._offsetY;
             },
             enumerable: true,
             configurable: true
         });
         Object.defineProperty(Collider.prototype, "Bottom", {
             get: function () {
-                return this.owner.y + this._offsetY + this.Height / 2;
+                return this.owner.y + this._offsetY + this.Height;
             },
             enumerable: true,
             configurable: true
@@ -221,18 +217,22 @@ var components;
         });
         Object.defineProperty(Collider.prototype, "Right", {
             get: function () {
-                return this.owner.x + this._offsetY + this.Width;
+                return this.owner.x + this._offsetX + this.Width;
             },
             enumerable: true,
             configurable: true
         });
-        Object.defineProperty(Collider.prototype, "Border", {
-            get: function () {
-                return this._border;
-            },
-            enumerable: true,
-            configurable: true
-        });
+        Collider.prototype.AddAxis = function () {
+            var axisX = new createjs.Shape();
+            var axisY = new createjs.Shape();
+            axisX.graphics.setStrokeStyle(1).beginStroke("#00FF00").drawRect(0, 0, 15, 1).endStroke();
+            axisY.graphics.setStrokeStyle(1).beginStroke("#FF0000").drawRect(0, -15, 1, 15).endStroke();
+            this.owner.addChild(axisX);
+            this.owner.addChild(axisY);
+        };
+        Collider.prototype.ShowCollision = function (b) {
+            this._border.graphics.setStrokeStyle(1).beginStroke(b ? "#FF0000" : "#00FF7F").drawRect(-this._offsetX, -this._offsetY, this._width, this._height).endStroke();
+        };
         Collider.prototype.Update = function () {
         };
         return Collider;

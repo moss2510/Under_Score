@@ -8,5 +8,6 @@ module config {
         public static readonly SPACE: number = 32;
         public static readonly F: number = 70;
         public static readonly G: number = 71;
+        public static readonly V: number = 86;
     }
 }

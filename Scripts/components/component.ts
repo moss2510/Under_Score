@@ -124,8 +124,6 @@ module components {
 
     export class Collider extends components.Component {
 
-        public x: number;
-        public y: number;
         private _offsetX: number;
         private _offsetY: number;
         private _width: number;
@@ -158,11 +156,11 @@ module components {
         }
 
         get Top(): number {
-            return this.owner.y - this._offsetY - this.Height / 2;
+            return this.owner.y - this._offsetY;
         }
 
         get Bottom(): number {
-            return this.owner.y + this._offsetY + this.Height / 2;
+            return this.owner.y + this._offsetY + this.Height;
         }
 
         get Left(): number {
@@ -170,14 +168,10 @@ module components {
         }
 
         get Right(): number {
-            return this.owner.x + this._offsetY + this.Width;
+            return this.owner.x + this._offsetX + this.Width;
         }
 
         private _border: createjs.Shape;
-
-        get Border(): createjs.Shape {
-            return this._border;
-        }
 
         constructor(owner: objects.GameObject, offsetX: number, offsetY: number, width: number, height: number) {
             super(owner);
@@ -187,19 +181,29 @@ module components {
             this._width = width;
             this._height = height;
             this._border = new createjs.Shape();
-            this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(0, 0, width, height).endStroke();
+            this._border.graphics.setStrokeStyle(1).beginStroke("#00FF7F").drawRect(-this._offsetX, -this._offsetY, width, height).endStroke();
+            
             this.owner.addChild(this._border);
 
-            console.log(this.owner.x + " - " + this.owner.y);
-            console.log(this.Width + " - " + this.Height);
-            console.log(this.Left);
-            console.log(this.Right);
-            console.log(this.Top);
-            console.log(this.Bottom);
+            console.log("Collider Info:");
+            console.log(this);
         }
 
+        public AddAxis(){
+            let axisX = new createjs.Shape();
+            let axisY = new createjs.Shape();
+            axisX.graphics.setStrokeStyle(1).beginStroke("#00FF00").drawRect(0, 0, 15, 1).endStroke();
+            axisY.graphics.setStrokeStyle(1).beginStroke("#FF0000").drawRect(0, -15, 1, 15).endStroke();
+            this.owner.addChild(axisX);
+            this.owner.addChild(axisY);
+        }
+
+        public ShowCollision(b : boolean){
+            this._border.graphics.setStrokeStyle(1).beginStroke(b ? "#FF0000" : "#00FF7F").drawRect(-this._offsetX, -this._offsetY, this._width, this._height).endStroke();
+        }
 
         public Update(): void {
+
         }
     }
 }

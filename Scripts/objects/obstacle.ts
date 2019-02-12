@@ -1,10 +1,12 @@
 module objects {
     export class Obstacle extends GameObject {
+        public OnAction(): void {
+        }
 
         private _direction: number = 1;
 
         constructor() {
-            super(32, 32, {
+            super(0, 0, 32, 32, {
                 framerate: 10,
                 images: [managers.GameManager.AssetManager.getResult("spritesheet_obstacle")],
                 frames: { width: 32, height: 32 },

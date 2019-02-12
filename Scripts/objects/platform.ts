@@ -1,8 +1,10 @@
 module objects {
     export class Platform extends objects.GameObject {
+        public OnAction(): void {
+        }
 
         constructor(x: number, y: number, width: number, height: number) {
-            super(width, height);
+            super(x, y, width, height);
             this.x = x;
             this.y = y;
             this.Sprite = new createjs.Sprite(new createjs.SpriteSheet({

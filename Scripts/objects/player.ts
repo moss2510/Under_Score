@@ -4,9 +4,6 @@ module objects {
         private _movementSpeed: number = 5;
         private _jumpForce: number = 100;
 
-        private _isJumping: boolean = false;
-        private _isMoving: boolean = false;
-
         // GameObject Components
         private _rb2d: components.Rigidbody2D;
         private _hp: components.HealthComponent;
@@ -17,14 +14,15 @@ module objects {
         private _shieldBar: controls.ProgressBar;
 
         private _isPlayingAnimation: boolean;
-        private _movingDirection: number;
-
-        private _isClamping: boolean;
 
         private _lastLadder: objects.Ladder;
+        private _lastPlatform: objects.Platform;
+
+        private _action: objects.Action;
+        private _direction: objects.Direction;
 
         constructor() {
-            super(32, 32, {
+            super(0, 730, 32, 32, {
                 framerate: 1,
                 images: [managers.GameManager.AssetManager.getResult("spritesheet_player")],
                 frames: { width: 32, height: 32 },
@@ -39,8 +37,8 @@ module objects {
                 }
             });
             this.name = "player";
-            this._movingDirection = 1;
-            this.y = 730;
+            this._direction = Direction.RIGHT;
+            this.playAndStopAnimation("stand");
             // Add Rigidbody to allow gravity
             this._rb2d = new components.Rigidbody2D(this);
             this.AddComponent(this._rb2d);
@@ -53,7 +51,7 @@ module objects {
             this._shield.RegenerateRate = 0.1;
             this.AddComponent(this._shield);
             // Add Collider
-            this.collider = new components.Collider(this, 0, 0, 32, 32);
+            this.collider = new components.Collider(this, this.PivotX, this.PivotY, this.Width, this.Height);
             this.AddComponent(this.collider);
 
             managers.GameManager.CameraManager.Follow(this);
@@ -80,47 +78,74 @@ module objects {
                 this._hp.Reduce(10);
                 this._healthBar.Value = this._hp.Value;
             }
-            this.checkCollision();
+            //this.x = managers.GameManager.SceneManager.CurrentStage.mouseX;
+            //this.y = managers.GameManager.SceneManager.CurrentStage.mouseY;
+        }
+
+        public OnAction(): void {
+            switch (this._action) {
+                case Action.STANDING:
+                    this.playAndStopAnimation("stand");
+                    break;
+                case Action.WALKING:
+                    if (!this._isPlayingAnimation) {
+                        this.playAnimation("run");
+                    }
+                    break;
+                case Action.JUMPING:
+                    if (!this._isPlayingAnimation) {
+                        this.playAndStopAnimation("jump");
+                    }
+                    break;
+                case Action.CLAMPING:
+                    if (!this._isPlayingAnimation) {
+                        this.playAnimation("clamping");
+                    }
+                    break;
+                case Action.INTERACTING:
+                    break;
+            }
         }
 
         private checkMovementInput() {
-            if (managers.InputManager.KeyDown(config.Key.LEFT)) {
-                this._isMoving = true;
-                this._movingDirection = -1;
-            }
-            else if (managers.InputManager.KeyDown(config.Key.RIGHT)) {
-                this._isMoving = true;
-                this._movingDirection = 1;
-            }
-            else {
-                this._isMoving = false;
-                this.playAndStopAnimation("stand");
+            // If not clamping then player can move left or right
+            if (this._action != Action.CLAMPING) {
+                if (managers.InputManager.KeyDown(config.Key.LEFT)) {
+                    this._action = Action.WALKING;
+                    this._direction = Direction.LEFT;
+                }
+                else if (managers.InputManager.KeyDown(config.Key.RIGHT)) {
+                    this._action = Action.WALKING;
+                    this._direction = Direction.RIGHT;
+                }
+                else {
+                    if (this._action == Action.WALKING) {
+                        this._action = Action.STANDING;
+                    }
+                }
             }
 
-            if (this._isMoving) {
-                this.x += this._movementSpeed * this._movingDirection;
-                if (!this._isPlayingAnimation) {
-                    this.playAnimation("run");
-                }
+            if (this._action == Action.WALKING) {
+                this.x += this._movementSpeed * this._direction;
             }
         }
 
         private checkJumpInput() {
-            if (managers.InputManager.KeyUp(config.Key.SPACE) && !this._isJumping) {
-                this._isJumping = true;
+            if (managers.InputManager.KeyUp(config.Key.SPACE) && this._action != Action.JUMPING) {
+                this._action = Action.JUMPING;
                 createjs.Tween.get(this).to({ y: this.y - this._jumpForce }, 300).call(this.onFinishJump);
-                if (!this._isPlayingAnimation) {
-                    this.playAnimation("jump");
-                }
                 //createjs.Sound.play("sfxHit");
             }
             if (managers.InputManager.KeyDown(config.Key.F)) {
                 this.y -= this._jumpForce;
             }
+            if (managers.InputManager.KeyDown(config.Key.V)) {
+                this.y += this._jumpForce;
+            }
         }
 
         private playAnimation(animation: string) {
-            if (this._movingDirection == 1) {
+            if (this._direction == Direction.RIGHT) {
                 this.Sprite.gotoAndPlay(animation + "Right");
             }
             else {
@@ -130,7 +155,7 @@ module objects {
         }
 
         private playAndStopAnimation(animation: string) {
-            if (this._movingDirection == 1) {
+            if (this._direction == Direction.RIGHT) {
                 this.Sprite.gotoAndStop(animation + "Right");
             }
             else {
@@ -144,25 +169,35 @@ module objects {
         }
 
         public onFinishJump() {
-            createjs.Tween.get(this).to({ y: this.y + this._jumpForce }, 500).call(() => this._isJumping = false);
+            createjs.Tween.get(this).to({ y: this.y + this._jumpForce }, 500).call(() => this._action = Action.STANDING);
         }
 
         public OnCollisionEnter(other: objects.GameObject) {
-            if (other.name === "platform") {
-                if (this.Collider.y < other.Collider.y) {
-                    if (!this._isClamping) {
-                        this.y = other.y - this.regY;
-                    }
+
+            if (this._action != Action.CLAMPING) {
+                if (other.name === "platform") {
+                    this.y = other.Collider.Top + this.regY / 2;
                 }
             }
-            else if (other.name === "ladder") {
+            else {
+                if (utils.Util.NotNullOrUndefined(this._lastPlatform) && this._lastPlatform == other) {
+                    this._action = Action.STANDING;
+                }
+            }
+
+            if (other.name === "ladder") {
                 if (managers.InputManager.KeyDown(config.Key.UP)) {
-                    console.log("clamping");
                     this._lastLadder = other;
                     this.y -= this._movementSpeed;
                     this._rb2d.GravityScale = 0;
-                    this._isClamping = true;
+                    this._action = Action.CLAMPING;
                     this.Sprite.gotoAndPlay("clamping");
+                }
+                else if (managers.InputManager.KeyDown(config.Key.DOWN)) {
+                    this._lastPlatform = other;
+                    this._action = Action.CLAMPING;
+                    this.Sprite.gotoAndPlay("clamping");
+                    this.y += this._movementSpeed;
                 }
             }
         }
@@ -176,21 +211,6 @@ module objects {
                 //     this._rb2d.GravityScale = 1;
                 //     this._isClamping = false;
                 // }
-            }
-        }
-
-        private checkCollision(): void {
-            for (let go of managers.GameManager.CurrentLevel.GameObjects) {
-                if (go.name == this.name || !go.Collider.EnableCollisionCheck) {
-                    continue;
-                }
-                if(physics.Physics.CollisionAABB(this, go)){
-                    console.log("Colliding");
-                    this.OnCollisionEnter(go);
-                }
-                else{
-                    this.OnCollisionExit(go);
-                }
             }
         }
     }

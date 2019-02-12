@@ -1,15 +1,21 @@
 module objects {
+    export enum Action{
+        STANDING, WALKING, JUMPING, CLAMPING, INTERACTING
+    }
+    export enum Direction{
+        LEFT = -1, RIGHT = 1
+    }
     export abstract class GameObject extends createjs.Container {
 
         private _transform: components.Transform;
 
         public position: math.Vector2;
 
-        protected width: number;
-        protected height: number;
+        private _width: number = 0;
+        private _height: number = 0;
 
-        private _pivotX: number;
-        private _pivotY: number;
+        private _pivotX: number = 0;
+        private _pivotY: number = 0;
 
         private _components: components.Component[] = new Array();
 
@@ -32,11 +38,11 @@ module objects {
         }
 
         get Width(): number {
-            return this.width;
+            return this._width;
         }
 
         get Height(): number {
-            return this.height;
+            return this._height;
         }
 
         get CurrentLevel(): scenes.Play {
@@ -53,6 +59,8 @@ module objects {
 
         set Sprite(sprite: createjs.Sprite) {
             this.sprite = sprite;
+            this.sprite.regX = this.PivotX;
+            this.sprite.regY = this.PivotY;
             this.removeAllChildren();
             this.addChild(this.sprite);
         }
@@ -69,19 +77,17 @@ module objects {
         public SetPivotPoint(x: number, y: number) {
             this._pivotX = x;
             this._pivotY = y;
-            this.regX = x;
-            this.regY = y;
         }
 
-        constructor(width: number, height: number, animationData?: object) {
+        constructor(x: number = 0, y: number = 0, width: number, height: number, animationData?: object) {
             super();
-            this.x = 0;
-            this.y = 0;
-            this.width = width;
-            this.height = height;
+            this.x = x;
+            this.y = y;
+            this._width = width;
+            this._height = height;
+            this.Init();
             this._animationData = animationData;
             this.Sprite = new createjs.Sprite(new createjs.SpriteSheet(this._animationData));
-            this.Init();
             this._afterInit();
         }
 
@@ -98,15 +104,23 @@ module objects {
             if (this.y < this.PivotY) {
                 this.y = this.PivotY;
             }
-            let positionPoint = new createjs.Shape();
-            positionPoint.graphics.setStrokeStyle(1).beginStroke("#FF0000").drawCircle(this.x, this.y, 1).endStroke();
-            this.addChild(positionPoint);
+
+            // Add PivotPoint
+            let pivotPoint = new createjs.Shape();
+            pivotPoint.graphics.setStrokeStyle(1).beginStroke("#0000FF").drawCircle(0, 0, 1).endStroke();
+            this.addChild(pivotPoint);
+
+            // Add PivotPoint
+            let position = new createjs.Shape();
+            position.graphics.setStrokeStyle(1).beginStroke("#FFFF00").drawCircle(0, 0, 3).endStroke();
+            this.addChild(position);
         }
 
         public Update(): void {
             this.UpdateTransform();
             this.updateComponents();
             this.CheckBoundary();
+            this.OnAction();
         }
 
         public AddComponent(component: components.Component) {
@@ -128,6 +142,7 @@ module objects {
 
         public abstract Init(): void;
         public abstract UpdateTransform(): void;
+        public abstract OnAction(): void; // Use this method to update action state and animation transition
         public abstract OnCollisionEnter(other: objects.GameObject): void;
 
         // Methods to Override

@@ -16,7 +16,7 @@ var objects;
     var Platform = /** @class */ (function (_super) {
         __extends(Platform, _super);
         function Platform(x, y, width, height) {
-            var _this = _super.call(this, width, height) || this;
+            var _this = _super.call(this, x, y, width, height) || this;
             _this.x = x;
             _this.y = y;
             _this.Sprite = new createjs.Sprite(new createjs.SpriteSheet({
@@ -29,6 +29,8 @@ var objects;
             _this.AddComponent(_this.collider);
             return _this;
         }
+        Platform.prototype.OnAction = function () {
+        };
         Platform.prototype.Init = function () {
         };
         Platform.prototype.UpdateTransform = function () {

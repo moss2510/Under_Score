@@ -16,14 +16,11 @@ var levels;
     var Level1 = /** @class */ (function (_super) {
         __extends(Level1, _super);
         function Level1(bg) {
-            var _this = _super.call(this, "Floor 1", bg) || this;
-            _this._numberOfObstacles = 10;
-            return _this;
+            return _super.call(this, "Floor 1", bg) || this;
         }
         Level1.prototype.Init = function () {
             this.SetLevelSize(1920, 1080);
             this.SetLevelBoundarySize(1);
-            this._player = new objects.Player();
             // Trap
             // for (let i = 0; i < this._numberOfObstacles; i++) {
             //     let enemy = new objects.Obstacle();
@@ -35,19 +32,15 @@ var levels;
             this._backgroundMusic.volume = 0.3;
             */
             // Platform
-            //   this.AddGameObject(new objects.Platform(0, 70, managers.GameManager.CurrentLevel.LevelWidth - 1, 23));
-            //   this.AddGameObject(new objects.Platform(0, 336, 1770, 23));
-            //   this.AddGameObject(new objects.Platform(0, 540, managers.GameManager.CurrentLevel.LevelWidth - 1, 23));
-            this.AddGameObject(new objects.Platform(30, 767, 880, 23));
-            //   this.AddGameObject(new objects.Platform(1020, 767, 900, 23));
-            /*
-                        // Ladder
-                        this.AddGameObject(new objects.Ladder(54, 108, 64, 224));
-                        this.AddGameObject(new objects.Ladder(90, 569, 64, 196));
-                        this.AddGameObject(new objects.Ladder(1700, 363, 64, 178));
-            */
-            // Player
-            this.AddGameObject(this._player);
+            this.AddGameObject(new objects.Platform(0, 80, managers.GameManager.CurrentLevel.LevelWidth - 1, 23));
+            this.AddGameObject(new objects.Platform(0, 336, 1770, 23));
+            this.AddGameObject(new objects.Platform(0, 540, managers.GameManager.CurrentLevel.LevelWidth - 1, 23));
+            this.AddGameObject(new objects.Platform(0, 767, 880, 23));
+            this.AddGameObject(new objects.Platform(1020, 767, 900, 23));
+            // Ladder
+            this.AddGameObject(new objects.Ladder(54, 75, 69, 260));
+            this.AddGameObject(new objects.Ladder(90, 537, 66, 229));
+            this.AddGameObject(new objects.Ladder(1700, 334, 64, 207));
         };
         Level1.prototype.OnSceneEnter = function () {
             console.log("Loading " + this.Name + "...");

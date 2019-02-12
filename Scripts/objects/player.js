@@ -16,7 +16,7 @@ var objects;
     var Player = /** @class */ (function (_super) {
         __extends(Player, _super);
         function Player() {
-            var _this = _super.call(this, 32, 32, {
+            var _this = _super.call(this, 0, 730, 32, 32, {
                 framerate: 1,
                 images: [managers.GameManager.AssetManager.getResult("spritesheet_player")],
                 frames: { width: 32, height: 32 },
@@ -32,11 +32,9 @@ var objects;
             }) || this;
             _this._movementSpeed = 5;
             _this._jumpForce = 100;
-            _this._isJumping = false;
-            _this._isMoving = false;
             _this.name = "player";
-            _this._movingDirection = 1;
-            _this.y = 730;
+            _this._direction = objects.Direction.RIGHT;
+            _this.playAndStopAnimation("stand");
             // Add Rigidbody to allow gravity
             _this._rb2d = new components.Rigidbody2D(_this);
             _this.AddComponent(_this._rb2d);
@@ -49,7 +47,7 @@ var objects;
             _this._shield.RegenerateRate = 0.1;
             _this.AddComponent(_this._shield);
             // Add Collider
-            _this.collider = new components.Collider(_this, 0, 0, 32, 32);
+            _this.collider = new components.Collider(_this, _this.PivotX, _this.PivotY, _this.Width, _this.Height);
             _this.AddComponent(_this.collider);
             managers.GameManager.CameraManager.Follow(_this);
             _this._healthBar = new controls.ProgressBar(managers.GameManager.SceneManager.ScreenWidth - 174, 24, 150, 20, _this._hp.Value, "black", "red", 2, "#D3D3D3");
@@ -71,43 +69,69 @@ var objects;
                 this._hp.Reduce(10);
                 this._healthBar.Value = this._hp.Value;
             }
-            this.checkCollision();
+            //this.x = managers.GameManager.SceneManager.CurrentStage.mouseX;
+            //this.y = managers.GameManager.SceneManager.CurrentStage.mouseY;
+        };
+        Player.prototype.OnAction = function () {
+            switch (this._action) {
+                case objects.Action.STANDING:
+                    this.playAndStopAnimation("stand");
+                    break;
+                case objects.Action.WALKING:
+                    if (!this._isPlayingAnimation) {
+                        this.playAnimation("run");
+                    }
+                    break;
+                case objects.Action.JUMPING:
+                    if (!this._isPlayingAnimation) {
+                        this.playAndStopAnimation("jump");
+                    }
+                    break;
+                case objects.Action.CLAMPING:
+                    if (!this._isPlayingAnimation) {
+                        this.playAnimation("clamping");
+                    }
+                    break;
+                case objects.Action.INTERACTING:
+                    break;
+            }
         };
         Player.prototype.checkMovementInput = function () {
-            if (managers.InputManager.KeyDown(config.Key.LEFT)) {
-                this._isMoving = true;
-                this._movingDirection = -1;
-            }
-            else if (managers.InputManager.KeyDown(config.Key.RIGHT)) {
-                this._isMoving = true;
-                this._movingDirection = 1;
-            }
-            else {
-                this._isMoving = false;
-                this.playAndStopAnimation("stand");
-            }
-            if (this._isMoving) {
-                this.x += this._movementSpeed * this._movingDirection;
-                if (!this._isPlayingAnimation) {
-                    this.playAnimation("run");
+            // If not clamping then player can move left or right
+            if (this._action != objects.Action.CLAMPING) {
+                if (managers.InputManager.KeyDown(config.Key.LEFT)) {
+                    this._action = objects.Action.WALKING;
+                    this._direction = objects.Direction.LEFT;
                 }
+                else if (managers.InputManager.KeyDown(config.Key.RIGHT)) {
+                    this._action = objects.Action.WALKING;
+                    this._direction = objects.Direction.RIGHT;
+                }
+                else {
+                    if (this._action == objects.Action.WALKING) {
+                        this._action = objects.Action.STANDING;
+                    }
+                }
+            }
+            if (this._action == objects.Action.WALKING) {
+                this.x += this._movementSpeed * this._direction;
             }
         };
         Player.prototype.checkJumpInput = function () {
-            if (managers.InputManager.KeyUp(config.Key.SPACE) && !this._isJumping) {
-                this._isJumping = true;
+            if (managers.InputManager.KeyUp(config.Key.SPACE) && this._action != objects.Action.JUMPING) {
+                this._action = objects.Action.JUMPING;
                 createjs.Tween.get(this).to({ y: this.y - this._jumpForce }, 300).call(this.onFinishJump);
-                if (!this._isPlayingAnimation) {
-                    this.playAnimation("jump");
-                }
                 //createjs.Sound.play("sfxHit");
             }
             if (managers.InputManager.KeyDown(config.Key.F)) {
                 this.y -= this._jumpForce;
             }
+            if (managers.InputManager.KeyDown(config.Key.V)) {
+                this.y += this._jumpForce;
+            }
         };
         Player.prototype.playAnimation = function (animation) {
-            if (this._movingDirection == 1) {
+            if (this._direction == objects.Direction.RIGHT) {
                 this.Sprite.gotoAndPlay(animation + "Right");
             }
             else {
@@ -116,7 +140,7 @@ var objects;
             this._isPlayingAnimation = true;
         };
         Player.prototype.playAndStopAnimation = function (animation) {
-            if (this._movingDirection == 1) {
+            if (this._direction == objects.Direction.RIGHT) {
                 this.Sprite.gotoAndStop(animation + "Right");
             }
             else {
@@ -129,24 +153,32 @@ var objects;
         };
         Player.prototype.onFinishJump = function () {
             var _this = this;
-            createjs.Tween.get(this).to({ y: this.y + this._jumpForce }, 500).call(function () { return _this._isJumping = false; });
+            createjs.Tween.get(this).to({ y: this.y + this._jumpForce }, 500).call(function () { return _this._action = objects.Action.STANDING; });
         };
         Player.prototype.OnCollisionEnter = function (other) {
-            if (other.name === "platform") {
-                if (this.Collider.y < other.Collider.y) {
-                    if (!this._isClamping) {
-                        this.y = other.y - this.regY;
-                    }
+            if (this._action != objects.Action.CLAMPING) {
+                if (other.name === "platform") {
+                    this.y = other.Collider.Top + this.regY / 2;
                 }
             }
-            else if (other.name === "ladder") {
+            else {
+                if (utils.Util.NotNullOrUndefined(this._lastPlatform) && this._lastPlatform == other) {
+                    this._action = objects.Action.STANDING;
+                }
+            }
+            if (other.name === "ladder") {
                 if (managers.InputManager.KeyDown(config.Key.UP)) {
-                    console.log("clamping");
                     this._lastLadder = other;
                     this.y -= this._movementSpeed;
                     this._rb2d.GravityScale = 0;
-                    this._isClamping = true;
+                    this._action = objects.Action.CLAMPING;
                     this.Sprite.gotoAndPlay("clamping");
+                }
+                else if (managers.InputManager.KeyDown(config.Key.DOWN)) {
+                    this._lastPlatform = other;
+                    this._action = objects.Action.CLAMPING;
+                    this.Sprite.gotoAndPlay("clamping");
+                    this.y += this._movementSpeed;
                 }
             }
         };
@@ -159,21 +191,6 @@ var objects;
                 //     this._rb2d.GravityScale = 1;
                 //     this._isClamping = false;
                 // }
-            }
-        };
-        Player.prototype.checkCollision = function () {
-            for (var _i = 0, _a = managers.GameManager.CurrentLevel.GameObjects; _i < _a.length; _i++) {
-                var go = _a[_i];
-                if (go.name == this.name || !go.Collider.EnableCollisionCheck) {
-                    continue;
-                }
-                if (physics.Physics.CollisionAABB(this, go)) {
-                    console.log("Colliding");
-                    this.OnCollisionEnter(go);
-                }
-                else {
-                    this.OnCollisionExit(go);
-                }
             }
         };
         return Player;

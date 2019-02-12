@@ -16,7 +16,7 @@ var objects;
     var Obstacle = /** @class */ (function (_super) {
         __extends(Obstacle, _super);
         function Obstacle() {
-            var _this = _super.call(this, 32, 32, {
+            var _this = _super.call(this, 0, 0, 32, 32, {
                 framerate: 10,
                 images: [managers.GameManager.AssetManager.getResult("spritesheet_obstacle")],
                 frames: { width: 32, height: 32 },
@@ -27,6 +27,8 @@ var objects;
             _this._direction = 1;
             return _this;
         }
+        Obstacle.prototype.OnAction = function () {
+        };
         Obstacle.prototype.Init = function () {
             this.SetPivotPoint(this.Width / 2, this.Height / 2);
             this.x = Math.floor(Math.random() * (managers.GameManager.SceneManager.ScreenWidth) - this.PivotX);
