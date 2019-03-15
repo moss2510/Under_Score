@@ -22,12 +22,15 @@ var scenes;
             _this._levelBoundarySize = 0;
             _this._gameObjects = new Array();
             _this._guiControls = new Array();
+            managers.GameManager.CurrentLevel = _this;
             _this._name = name;
             _this._gameLayer = new createjs.Container();
             _this._gameLayer.addChild(bg);
             _this._guiLayer = new createjs.Container();
             _this.addChild(_this._gameLayer);
             _this.addChild(_this._guiLayer);
+            _this.player = new objects.Player();
+            _this.AddGameObject(_this.player);
             return _this;
         }
         Object.defineProperty(Play.prototype, "GUILayer", {
@@ -40,6 +43,13 @@ var scenes;
         Object.defineProperty(Play.prototype, "GameLayer", {
             get: function () {
                 return this._gameLayer;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Play.prototype, "GameObjects", {
+            get: function () {
+                return this._gameObjects;
             },
             enumerable: true,
             configurable: true
@@ -63,11 +73,32 @@ var scenes;
                 var gameObject = _a[_i];
                 gameObject.Update();
             }
+            for (var _b = 0, _c = this._gameObjects; _b < _c.length; _b++) {
+                var go = _c[_b];
+                // Skip checking player to player and if collision is disabled
+                if (go.name == "player" || !go.Collider.EnableCollisionCheck) {
+                    continue;
+                }
+                if (physics.Physics.CollisionAABB(this.player, go)) {
+                    //this.player.Collider.ShowCollision(true);
+                    //go.Collider.ShowCollision(true);
+                    this.player.OnCollisionEnter(go);
+                }
+                else {
+                    //this.player.Collider.ShowCollision(false);
+                    //go.Collider.ShowCollision(false);
+                }
+                // else{
+                //     this._player.OnCollisionExit(go);
+                // }
+            }
             if (this._levelCompleted) {
                 this.OnLevelCompleted();
             }
         };
         Play.prototype.AddGameObject = function (object) {
+            console.log("Added " + object.name);
+            object.Collider.AddAxis();
             object.CurrentLevel = this;
             this._gameObjects.push(object);
             this._gameLayer.addChild(object);

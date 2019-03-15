@@ -16,16 +16,11 @@ var levels;
     var Level3 = /** @class */ (function (_super) {
         __extends(Level3, _super);
         function Level3(bg) {
-            var _this = _super.call(this, "Rooftop", bg) || this;
-            _this._numberOfObstacles = 10;
-            return _this;
+            return _super.call(this, "Rooftop", bg) || this;
         }
         Level3.prototype.Init = function () {
             this.SetLevelSize(1600, 1200);
             this.SetLevelBoundarySize(4);
-            this._player = new objects.Player();
-            this.AddGameObject(new objects.Obstacle());
-            this.AddGameObject(this._player);
         };
         Level3.prototype.OnSceneEnter = function () {
             console.log("Loading " + this.Name + "...");

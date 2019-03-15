@@ -16,7 +16,7 @@ var objects;
     var Obstacle = /** @class */ (function (_super) {
         __extends(Obstacle, _super);
         function Obstacle() {
-            var _this = _super.call(this, 32, 32, {
+            var _this = _super.call(this, 0, 0, 32, 32, {
                 framerate: 10,
                 images: [managers.GameManager.AssetManager.getResult("spritesheet_obstacle")],
                 frames: { width: 32, height: 32 },
@@ -27,11 +27,13 @@ var objects;
             _this._direction = 1;
             return _this;
         }
+        Obstacle.prototype.OnAction = function () {
+        };
         Obstacle.prototype.Init = function () {
             this.SetPivotPoint(this.Width / 2, this.Height / 2);
             this.x = Math.floor(Math.random() * (managers.GameManager.SceneManager.ScreenWidth) - this.PivotX);
             this.y = Math.floor(Math.random() * (managers.GameManager.SceneManager.ScreenHeight) + this.PivotY);
-            var rb2d = new components.Rigidbody2D();
+            var rb2d = new components.Rigidbody2D(this);
             this.AddComponent(rb2d);
         };
         Obstacle.prototype.UpdateTransform = function () {
@@ -41,6 +43,10 @@ var objects;
             _super.prototype.CheckBoundary.call(this);
             if (this.x >= this.CurrentLevel.LevelWidth - this.CurrentLevel.LevelBoundarySize - this.PivotX || this.x <= this.PivotX + this.CurrentLevel.LevelBoundarySize) {
                 this._direction *= -1;
+            }
+        };
+        Obstacle.prototype.OnCollisionEnter = function (other) {
+            if (other.name == "test") {
             }
         };
         return Obstacle;

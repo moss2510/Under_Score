@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,9 +9,20 @@
     <!-- CSS Section -->
     <link rel="stylesheet" href="Content/game.css">
 </head>
+
 <body>
     <div id="container" width="50%" margin="auto">
         <canvas id="canvas" width="800px" height="600px"></canvas>
+        <div id="controls">
+                <h3>Controls</h3>
+                <span>Movement - Left / Right Arrow Key</span>
+                <span>Clamp - Up / Down Arrow Key</span>
+                <span>Jump - Space</span>
+                <h3>Control for Testing</h3>
+                <span>Move Up - F</span>
+                <span>Move Down - V</span>
+                <span>Reduce Health - G</span>
+            </div>
     </div>
 
     <!-- Java Script Section -->
@@ -23,6 +35,8 @@
     <!-- Utils -->
     <script src="./Scripts/utils/utils.js"></script>
     <script src="./Scripts/config/key.js"></script>
+    <script src="./Scripts/math/math.js"></script>
+    <script src="./Scripts/physics/physics.js"></script>
     <!-- Config -->
     <script src="./Scripts/physics/config.js"></script>
     <script src="./Scripts/config/config.js"></script>
@@ -47,7 +61,10 @@
     <script src="./Scripts/objects/gameobject.js"></script>
     <script src="./Scripts/objects/player.js"></script>
     <script src="./Scripts/objects/obstacle.js"></script>
+    <script src="./Scripts/objects/platform.js"></script>
+    <script src="./Scripts/objects/ladder.js"></script>
     <!-- Core -->
     <script src="./Scripts/core/game.js"></script>
 </body>
+
 </html>

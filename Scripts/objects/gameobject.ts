@@ -1,22 +1,33 @@
 module objects {
+    export enum Action{
+        STANDING, WALKING, JUMPING, CLIMBING, INTERACTING
+    }
+    export enum Direction{
+        LEFT = -1, RIGHT = 1
+    }
     export abstract class GameObject extends createjs.Container {
 
         private _transform: components.Transform;
 
-        private _width: number;
-        private _height: number;
+        public position: math.Vector2;
 
-        private _pivotX: number;
-        private _pivotY: number;
+        private _width: number = 0;
+        private _height: number = 0;
+
+        private _pivotX: number = 0;
+        private _pivotY: number = 0;
 
         private _components: components.Component[] = new Array();
 
         private _currentLevel: scenes.Play;
 
-        private _sprite: createjs.Sprite;
+        protected sprite: createjs.Sprite;
 
         // Animation Data
         private _animationData;
+
+        // Collider
+        protected collider: components.Collider;
 
         get PivotX(): number {
             return this._pivotX;
@@ -39,7 +50,7 @@ module objects {
         }
 
         get Sprite(): createjs.Sprite {
-            return this._sprite;
+            return this.sprite;
         }
 
         set CurrentLevel(level: scenes.Play) {
@@ -47,32 +58,36 @@ module objects {
         }
 
         set Sprite(sprite: createjs.Sprite) {
-            this._sprite = sprite;
-            this._sprite.regX = this._width / 2; // For Filp Sprite
-            this._sprite.regY = this._height / 2;
+            this.sprite = sprite;
+            this.sprite.regX = this.PivotX;
+            this.sprite.regY = this.PivotY;
             this.removeAllChildren();
-            this.addChild(this._sprite);
+            this.addChild(this.sprite);
+        }
+
+        get Collider(): components.Collider {
+            return this.collider;
         }
 
         // Direction 1 for RIGHT, -1 for LEFT
         public FlipSprite(direction: number) {
-            this._sprite.scaleX = direction;
+            this.sprite.scaleX = direction;
         }
 
         public SetPivotPoint(x: number, y: number) {
             this._pivotX = x;
             this._pivotY = y;
-            this.regX = x;
-            this.regY = y;
         }
 
-        constructor(width: number, height: number, animationData: object) {
+        constructor(x: number = 0, y: number = 0, width: number, height: number, animationData?: object) {
             super();
+            this.x = x;
+            this.y = y;
             this._width = width;
             this._height = height;
+            this.Init();
             this._animationData = animationData;
             this.Sprite = new createjs.Sprite(new createjs.SpriteSheet(this._animationData));
-            this.Init();
             this._afterInit();
         }
 
@@ -89,16 +104,27 @@ module objects {
             if (this.y < this.PivotY) {
                 this.y = this.PivotY;
             }
+
+            // Add PivotPoint
+            let pivotPoint = new createjs.Shape();
+            pivotPoint.graphics.setStrokeStyle(1).beginStroke("#0000FF").drawCircle(0, 0, 1).endStroke();
+            this.addChild(pivotPoint);
+
+            // Add PivotPoint
+            let position = new createjs.Shape();
+            position.graphics.setStrokeStyle(1).beginStroke("#FFFF00").drawCircle(0, 0, 3).endStroke();
+            this.addChild(position);
         }
 
         public Update(): void {
             this.UpdateTransform();
-            this._updateComponents();
+            this.updateComponents();
             this.CheckBoundary();
+            this.OnAction();
         }
 
         public AddComponent(component: components.Component) {
-            component.SetOwner(this);
+            console.log("Added " + component.name + " to " + this.name);
             this._components.push(component);
         }
 
@@ -108,16 +134,16 @@ module objects {
             }
         }
 
-        private _updateComponents(): void {
+        private updateComponents(): void {
             for (let component of this._components) {
-                if (component.Owner == this) {
-                    component.Update();
-                }
+                component.Update();
             }
         }
 
         public abstract Init(): void;
         public abstract UpdateTransform(): void;
+        public abstract OnAction(): void; // Use this method to update action state and animation transition
+        public abstract OnCollisionEnter(other: objects.GameObject): void;
 
         // Methods to Override
         public CheckBoundary(): void {
